@@ -1,2 +1,1 @@
-# kratzert.github.io
-my blog
+kratzert.github.io
