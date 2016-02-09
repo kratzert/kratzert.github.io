@@ -22,15 +22,18 @@ Anyway, I don't want to spend to much time on explaining Batch Normalization. If
 
 ## Backpropagation
 
-In this blog post I don't want to give a lecture in Backpropagation. But since this post is about Backpropagation in the BatchNorm Layer i will briefly try to explain what Backpropagation is or for what it is used. So let's first see what Wiki says:
+In this blog post I don't want to give a lecture in Backpropagation and Stochastic Gradient Descent (SGD). For now I will assume that whoever will read this post, has some basic understanding of these principles. For the rest, let me quote Wiki:
 
 >Backpropagation, an abbreviation for "backward propagation of errors", is a common method of training artificial neural networks used in conjunction with an optimization method such as gradient descent. The method calculates the gradient of a loss function with respect to all the weights in the network. The gradient is fed to the optimization method which in turn uses it to update the weights, in an attempt to minimize the loss function.
 
-Uff, sounds tough. So what do we want? We have a model (e.g. Neural Network) with some model parameters (e.g. the weights of any Layer or `gamma` and `beta` for the case of BatchNorm) in which we feed some input (e.g. an image) and receive and output (e.g. class of object in that image). During training we feed data through the Network and quantify the output by any loss function. In general they are defined in the way that we want the loss function to be minimized. So while training we try to find a set of model parameters that minimizes the loss function, or better, that gives us the best result for our task. And luckily we don't need to search blindly in the endless space of parameter combinations, instead we just calculate the gradient of the loss function and change our model parameters by some amount in the opposite direction. Wait...what?
-Most of the time, this is explained in 2D-Space. Assume that our model has 2 parameters. The loss function as a function of the model parameters can be plotted as a 3D-surface plot.
+Uff, sounds tough, eh? I will maybe write another post about this topic but for now I want to focus on the concrete example of the backwardpass through the BatchNorm-Layer.
+
+## Computational Graph of Batch Normalization Layer
+
+I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explenation through computational graphs. For the Batch Normalization Layer it would look like this:
 
 <div class="fig figcenter fighighlight">
-  <img src="/images/bn_backpass/peaks.png">
-  <div class="figcaption"> Algorithm of Batch Normalization copied from the Paper by Ioffe and Szegedy mentioned above.<br><br>
+  <img src="/images/bn_backpass/BNcircuit.PNG">
+  <div class="figcaption"> Computational graph of the BatchNorm-Layer. From left to right, following the black arrows flows the forward pass. The inputs are a matrix X and gamma and beta as vectors. From right to left, following the red arrows flows the backward pass<br><br>
   </div>
-</div
+</div>
