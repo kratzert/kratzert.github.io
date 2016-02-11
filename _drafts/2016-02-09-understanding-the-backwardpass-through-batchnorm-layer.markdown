@@ -35,7 +35,7 @@ Uff, sounds tough, eh? I will maybe write another post about this topic but for 
 I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explenation through computational graphs. These Graphs are a good way to visualize the computational flow of fairly complex functions by small, piecewise differentiable subfunctions. For the Batch Normalization Layer it would look something like this:
 
 <div class="fig figcenter fighighlight">
-  <img src="/images/bn_backpass/BNcircuit.PNG">
+  <img src="/images/bn_backpass/BNcircuit.png">
   <div class="figcaption"> Computational graph of the BatchNorm-Layer. From left to right, following the black arrows flows the forward pass. The inputs are a matrix X and gamma and beta as vectors. From right to left, following the red arrows flows the backward pass which distributes the gradient from above layer to gamma and beta and all the way back to the input.<br><br>
   </div>
 </div>
