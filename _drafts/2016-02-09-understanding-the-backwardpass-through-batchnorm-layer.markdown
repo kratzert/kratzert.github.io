@@ -55,7 +55,7 @@ def batchnorm_forward(x, gamma, beta, eps):
   #step2: substract mean vector of every trainings example
   xmu = x - mu
 
-  #step3 - lower branch, calculation denominator
+  #step3: following the lower branch - calculation denominator
   sq = xmu ** 2
 
   #step4: calculate variance
@@ -83,3 +83,35 @@ def batchnorm_forward(x, gamma, beta, eps):
 ```
 
 Note that for the excercise of the cs231n class we had to do a little more (calculate running mean and variance as well as implement different forward pass for trainings mode and test mode) but for the explenation of the backwardpass this piece of code will work.
+In the cache variable we store some stuff that we need for the computing of the backwardpass, as you will see now!
+
+## The power of Chain Rule for backpropagation
+
+For all who kept on reading until now (congratualations!!), we close to arrive the backward pass of the BatchNorm-Layer.
+To fully understand the channeling of the gradient backwards through the BatchNorm-Layer you should have some basic understanding of what the [Chain rule](https://en.wikipedia.org/wiki/Chain_rule) is. As a little refresh follows one figure that examplifies the use of chain rule for the backward pass in computational graphs.
+
+<div class="fig figcenter fighighlight">
+  <img src="/images/bn_backpass/chainrule_example.PNG">
+  <div class="figcaption">The forwardpass on the left in calculates `z` as a function `f(x,y)` using the input variables `x` and `y` (This could literally be any function, examples are shown in the BatchNorm-Graph above). The right side of the figures shows the backwardpass. Recieving `dL/dz`, the gradient of the loss function with respect to `z` from above, the gradients of `x` and `y` on the loss function can be calculate by applying the chain rule, as shown in the figure.<br><br>
+  </div>
+</div>
+
+So again, we only have to multiply the local gradient of the function with the gradient of above to channel the gradient backwards. Some derivations of some basic functions are listed in the [course material](http://cs231n.github.io/optimization-2/#sigmoid). If you understand that, and with some more basic knowledge in calculus, what will follow is a piece of cake!
+
+# Finally: The Backpass of the Batch Normalization
+
+In the comments of aboves code snippet I already numbered the computational steps by consecutive numbers. The Backpropagation follows these steps in reverse order. We will know take a more detailed look at every single computation of the backwardpass and by that derieving step by step a naive algorithm for the backward pass.
+
+### Step 9
+<div class="fig figleft fighighlight">
+  <img src="/images/bn_backpass/step9.png">
+  <div class="figcaption">Recall that the derivation of a function `f = x + y` that sums up to variables with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. And because the summation of `beta` during the forward pass is a rowwise summation, during the backward pass we need to sum up the gradient over all of its columns.<br><br>
+  </div>
+</div>
+
+### Step 8
+<div class="fig figleft fighighlight">
+  <img src="/images/bn_backpass/step8.png">
+  <div class="figcaption">Recall that the derivation of a function `f = x + y` that sums up to variables with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. And because the summation of `beta` during the forward pass is a rowwise summation, during the backward pass we need to sum up the gradient over all of its columns.<br><br>
+  </div>
+</div>
