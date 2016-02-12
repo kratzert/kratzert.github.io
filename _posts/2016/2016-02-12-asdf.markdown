@@ -104,7 +104,7 @@ In the comments of aboves code snippet I already numbered the computational step
 
 ### Step 9
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step9.png">
   <div class="figcaption">Backwardpass through the last summation gate of the BatchNorm-Layer. Enclosured in brackets I put the dimensions of Input/Output<br><br>
   </div>
@@ -113,7 +113,7 @@ Recall that the derivation of a function `f = x + y` with respect to any of thes
 
 ### Step 8
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step8.png">
   <div class="figcaption">Next follows the backward pass through the multiplication gate of the normalized input and the vector of gamma.<br><br>
   </div>
@@ -122,7 +122,7 @@ For any function `f = x * y` the derivation with respect to one of the inputs is
 
 ### Step 7
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step7.png">
   <div class="figcaption">This step during the forward pass was the final step of the normalization combining the two branches (nominator and denominator) of the computational graph. During the backward pass we will calculate the gradients that will flow seperatly through these two branches backwards.<br><br>
   </div>
@@ -131,7 +131,7 @@ It's basically the exact same operation, so lets not waste much time and continu
 
 ### Step 6
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step6.png">
   <div class="figcaption">This is a "one input-one output" node where, during the forward pass, we inverted the input (square root of the variance)<br><br>
   </div>
@@ -140,7 +140,7 @@ The local gradient is visualized in the image and should not be hard to derive b
 
 ### Step 5
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step5.png">
   <div class="figcaption">Again "one input-one output". This node calculates during the forward pass the denominator of the normalization.<br><br>
   </div>
@@ -149,7 +149,7 @@ The derivation of the local gradient is little magic and should need no explenat
 
 ### Step 4
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step4.png">
   <div class="figcaption">Also a "one input-one output" node. During the forward pass the output of this node is the variance of each feature `d for d in [1...D]`.<br><br>
   </div>
@@ -158,7 +158,7 @@ The derivation of this steps local gradient might look unclear at the very first
 
 ### Step 3
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step3.png">
   <div class="figcaption">This node outputs the square of its input, which during the forward pass was a matrix containing the input `x` subtracted by the per-feature `mean`.<br><br>
   </div>
@@ -167,7 +167,7 @@ I think for all who followed until here, there is not much to explain for the de
 
 ### Step 2
 
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step2.png">
   <div class="figcaption">Now this looks like a more fun gate! two inputs-two outputs! This node substracts the per-feature mean row-wise of each trainings example `n for n in [1...N]` during the forward pass.<br><br>
   </div>
@@ -175,7 +175,7 @@ I think for all who followed until here, there is not much to explain for the de
 Okay lets see. One of the definitions of backprogatation and computational graphs is, that whenever we have two gradients coming to one node, we simply add them up. Knowing this, the rest is little magic as the local gradient for a substraction is as hard to derive as for a summation. Note that for `mu` we have to sum up the gradients over the dimension `N` (as we did before for `gamma` and `beta`).
 
 ### Step 1
-<div class="fig figleft fighighlight">
+<div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step1.png">
   <div class="figcaption">The function of this node is exactly the same as of step 4. Only that during the forward pass the input was `x` - the input to the BatchNorm-Layer and the output here is `mu`, a vector that contains the mean of each feature.<br><br>
   </div>
