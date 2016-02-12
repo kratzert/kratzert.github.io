@@ -248,7 +248,7 @@
 
     h2 {
         font-size: 32px;
-
+        maring: 40px 0 20px
         @include media-query($on-laptop) {
             font-size: 28px;
         }
@@ -256,7 +256,7 @@
 
     h3 {
         font-size: 26px;
-
+        maring: 40px 0 20px
         @include media-query($on-laptop) {
             font-size: 22px;
         }
@@ -264,7 +264,7 @@
 
     h4 {
         font-size: 20px;
-
+        maring: 40px 0 20px
         @include media-query($on-laptop) {
             font-size: 18px;
         }

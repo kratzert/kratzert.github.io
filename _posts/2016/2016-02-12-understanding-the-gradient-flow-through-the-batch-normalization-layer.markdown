@@ -99,7 +99,7 @@ To fully understand the channeling of the gradient backwards through the BatchNo
 
 So again, we only have to multiply the local gradient of the function with the gradient of above to channel the gradient backwards. Some derivations of some basic functions are listed in the [course material](http://cs231n.github.io/optimization-2/#sigmoid). If you understand that, and with some more basic knowledge in calculus, what will follow is a piece of cake!
 
-# Finally: The Backpass of the Batch Normalization
+## Finally: The Backpass of the Batch Normalization
 
 In the comments of aboves code snippet I already numbered the computational steps by consecutive numbers. The Backpropagation follows these steps in reverse order, as we are literally backpassing through the computational graph. We will know take a more detailed look at every single computation of the backwardpass and by that deriving step by step a naive algorithm for the backward pass.
 
