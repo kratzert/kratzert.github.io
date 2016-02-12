@@ -1,15 +1,16 @@
 ---
 layout: "post"
-title: "Understanding the backwardpass through Batchnorm-Layer"
-date: "2016-02-09 14:54"
-excerpt: "An explenation of gradient flow through Batchnorm-Layer following the circuit represantation learned in Standfords class CS231n "
+title: "Understanding the gradient flow through the Batch Normalization Layer"
+date: "2016-02-12 13:56"
+excerpt: "Describing the naive backward pass of the gradient through the BatchNorm-Layer by looking at the computational graph."
 comments: true
 ---
+
 At the moment there is a wonderful course running at Standford University, called [CS231n - Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/), held by Andrej Karpathy, Justin Johnson and Fei-Fei Li. Fortunately all the [course material](http://cs231n.stanford.edu/syllabus.html) is provided for free and all the lectures are recorded and uploaded on [Youtube](https://www.youtube.com/playlist?list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC). This class gives and wonderful intro to machine learning/deep learning coming along with programming assignments.
 
 ## Batch Normalization
 
-One Topic, which kept me quite buisy for some time was the implemantation of [Batch Normalization](http://arxiv.org/abs/1502.03167), especially the backward pass. Batch Normalization is a technique to provide any layer in a Neural Network inputs that are zero mean/unit variance - and this is basically what they like! But BatchNorm consists of one more step with makes this algorithm really powerful. Here is the the BatchNorm Algorithm:
+One Topic, which kept me quite buisy for some time was the implemantation of [Batch Normalization](http://arxiv.org/abs/1502.03167), especially the backward pass. Batch Normalization is a technique to provide any layer in a Neural Network with inputs that are zero mean/unit variance - and this is basically what they like! But BatchNorm consists of one more step with makes this algorithm really powerful. Here is the the BatchNorm Algorithm:
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/bn_algorithm.PNG">
@@ -33,7 +34,7 @@ Uff, sounds tough, eh? I will maybe write another post about this topic but for 
 
 ## Computational Graph of Batch Normalization Layer
 
-I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explenation through computational graphs. These Graphs are a good way to visualize the computational flow of fairly complex functions by small, piecewise differentiable subfunctions. For the Batch Normalization Layer it would look something like this:
+I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explenation through computational graphs. These Graphs are a good way to visualize the computational flow of fairly complex functions by small, piecewise differentiable subfunctions. For the BatchNorm-Layer it would look something like this:
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/BNcircuit.png">
@@ -88,7 +89,7 @@ In the cache variable we store some stuff that we need for the computing of the 
 
 ## The power of Chain Rule for backpropagation
 
-For all who kept on reading until now (congratualations!!), we close to arrive the backward pass of the BatchNorm-Layer.
+For all who kept on reading until now (congratualations!!), we are close to arrive at the backward pass of the BatchNorm-Layer.
 To fully understand the channeling of the gradient backwards through the BatchNorm-Layer you should have some basic understanding of what the [Chain rule](https://en.wikipedia.org/wiki/Chain_rule) is. As a little refresh follows one figure that examplifies the use of chain rule for the backward pass in computational graphs.
 
 <div class="fig figcenter fighighlight">
@@ -101,7 +102,7 @@ So again, we only have to multiply the local gradient of the function with the g
 
 # Finally: The Backpass of the Batch Normalization
 
-In the comments of aboves code snippet I already numbered the computational steps by consecutive numbers. The Backpropagation follows these steps in reverse order. We will know take a more detailed look at every single computation of the backwardpass and by that deriving step by step a naive algorithm for the backward pass.
+In the comments of aboves code snippet I already numbered the computational steps by consecutive numbers. The Backpropagation follows these steps in reverse order, as we are literally backpassing through the computational graph. We will know take a more detailed look at every single computation of the backwardpass and by that deriving step by step a naive algorithm for the backward pass.
 
 ### Step 9
 
@@ -191,3 +192,63 @@ As this node executes the exact same operation as the one explained in step 4, a
   </div>
 </div>
 I only added this image to again visualize that at the very end we need to sum up the gradients `dx1` and `dx2` to get the final gradient `dx`. This matrix contains the gradient of the loss function with respect to the input of the BatchNorm-Layer. This gradient `dx` is also what we give as input to the backwardpass of the next layer, as for this layer we recieve `dout` from the layer above.
+
+# Naive implemantation of the backward pass through the BatchNorm-Layer
+
+Putting together every single step the naive implementation of the backwardpass might look something like this:
+
+```python
+def batchnorm_backward(dout, cache):
+
+  #unfold the variables stored in cache
+  xhat,gamma,xmu,ivar,sqrtvar,var,eps = cache
+
+  #get the dimensions of the input/output
+  N,D = dout.shape
+
+  #step9
+  dbeta = np.sum(dout, axis=0)
+  dgammax = dout #not necessary, but more understandable
+
+  #step8
+  dgamma = np.sum(dgammax*xhat, axis=0)
+  dxhat = dgammax * gamma
+
+  #step7
+  divar = np.sum(dxhat*xmu, axis=0)
+  dxmu1 = dxhat * ivar
+
+  #step6
+  dsqrtvar = -1. /(sqrtvar**2) * divar
+
+  #step5
+  dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
+
+  #step4
+  dsq = 1. /N * np.ones((N,D)) * dvar
+
+  #step3
+  dxmu2 = 2 * xmu * dsq
+
+  #step2
+  dx1 = (dxmu1 + dxmu2)
+  dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
+
+  #step1
+  dx2 = 1. /N * np.ones((N,D)) * dmu
+
+  #step0
+  dx = dx1 + dx2
+
+  return dx, dgamma, dbeta
+
+```
+
+**Note:** This is the naive implemantation of the backward pass. There exists an alternative implemantion, which is even a bit faster, but I personally found the naive implemantation way better for the purpose of understanding backpropagation through the BatchNorm-Layer. [This well written blog post](http://cthorey.github.io./backpropagation/) gives a more detailed derivation of the alternative (faster) implemantation. However, there is a much more calculus envolved. But once you have understood the naive implemantation, it might not be to hard to follow.
+
+# Some final words
+
+First of all I would like to thank the team of the cs231n class, that gratefully make all the material freely available. This gives people like me the possibility to take part in high class courses and learn a lot about deep learning in self-study.
+(Secondly it made me motivated to write my first blog post!)
+
+And as we have already passed the deadline for the second assignment, I might upload my code during the next days on github.
