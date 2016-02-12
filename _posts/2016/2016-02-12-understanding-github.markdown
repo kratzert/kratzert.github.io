@@ -1,8 +1,8 @@
 ---
 layout: "post"
-title: "Understanding the gradient flow through the Batch Normalization Layer"
-date: "2016-02-12 13:56"
-excerpt: "Describing the naive backward pass of the gradient through the BatchNorm-Layer by looking at the computational graph."
+title: "Understanding the backwardpass through Batchnorm-Layer"
+date: "2016-02-09 14:54"
+excerpt: "An explenation of gradient flow through Batchnorm-Layer following the circuit represantation learned in Standfords class CS231n "
 comments: true
 ---
 
