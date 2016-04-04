@@ -29,6 +29,7 @@ As a person who does a lot of autonomous learning, the Internet in these days of
 - [Andrej Karpathys Blog](kaparthy.github.io) - Blog with a lot of well written articles mainly about CV and CNNs
 - [CS231n](cs231n.github.io) - corresponding site to the CS231n course from Standford university. Each topic covered in an article.
 - [UFLDL Tutorial](http://ufldl.stanford.edu/tutorial/) - Unsupervised Feature Learning and Deep Learning Tutorials by Standford University
+- [Understanding LSTMs](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) - Some nice write up about LSTM-Nets by Christopher Olah
 
 
 ### Programming
