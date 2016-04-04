@@ -23,6 +23,7 @@ As a person who does a lot of autonomous learning, the Internet in these days of
 - [Visualizing and Understanding DNNs](https://www.youtube.com/watch?v=ghEmQSxT6tw) by Matt Zeiler presenting deconv-nets for visualizing DNNs
 - [Fun demo of CNN from '93](https://www.youtube.com/watch?v=FwFduRA_L6Q) - Yann LeCun presenting his CNN for handwritten digits.
 - [MarI/O](https://www.youtube.com/watch?v=qv6UVOQ0F44) - [NEAT](http://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf) applied on Super Mario World by SethBling
+- [The Art of neural networks](https://www.youtube.com/watch?v=0qVOUD76JOg) - Mike Tyka talking about the evolution of art and programming
 
 #### Blogs/Sites
 - [Andrej Karpathys Blog](kaparthy.github.io) - Blog with a lot of well written articles mainly about CV and CNNs
