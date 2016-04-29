@@ -125,7 +125,7 @@ For any function `f = x * y` the derivation with respect to one of the inputs is
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step7.png">
-  <div class="figcaption"<br>This step during the forward pass was the final step of the normalization combining the two branches (nominator and denominator) of the computational graph. During the backward pass we will calculate the gradients that will flow seperatly through these two branches backwards.<br>
+  <div class="figcaption"><br>This step during the forward pass was the final step of the normalization combining the two branches (nominator and denominator) of the computational graph. During the backward pass we will calculate the gradients that will flow seperatly through these two branches backwards.<br>
   </div>
 </div>
 It's basically the exact same operation, so lets not waste much time and continue. The two needed variables `xmu` and `ivar` for this step are also stored `cache` variable we pass to the backprop function. (And again: This is one of the main advantages of computational graphs. Splitting complex functions into a handful of simple basic operations. And like this you have a lot of repetitions!)
@@ -134,7 +134,7 @@ It's basically the exact same operation, so lets not waste much time and continu
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step6.png">
-  <div class="figcaption"><br>This is a "one input-one output" node where, during the forward pass, we inverted the input (square root of the variance)<br>
+  <div class="figcaption"><br>This is a "one input-one output" node where, during the forward pass, we inverted the input (square root of the variance).<br>
   </div>
 </div>
 The local gradient is visualized in the image and should not be hard to derive by hand. Multiplied by the gradient from above is what we channel to the next step. `sqrtvar` is also one of the variables passed in `cache`.
