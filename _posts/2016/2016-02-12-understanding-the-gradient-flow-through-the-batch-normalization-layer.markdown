@@ -2,7 +2,7 @@
 layout: "post"
 title: "Understanding the backward pass through Batch Normalization Layer"
 date: "2016-02-12 13:54"
-excerpt: "An explenation of gradient flow through BatchNorm-Layer following the circuit represantation learned in Standfords class CS231n."
+excerpt: "An explanation of gradient flow through BatchNorm-Layer following the circuit representation learned in Standfords class CS231n."
 comments: true
 ---
 
@@ -10,7 +10,7 @@ At the moment there is a wonderful course running at Standford University, calle
 
 ## Batch Normalization
 
-One Topic, which kept me quite busy for some time was the implemantation of [Batch Normalization](http://arxiv.org/abs/1502.03167), especially the backward pass. Batch Normalization is a technique to provide any layer in a Neural Network with inputs that are zero mean/unit variance - and this is basically what they like! But BatchNorm consists of one more step which makes this algorithm really powerful. Let's take a look at the BatchNorm Algorithm:
+One Topic, which kept me quite busy for some time was the implementation of [Batch Normalization](http://arxiv.org/abs/1502.03167), especially the backward pass. Batch Normalization is a technique to provide any layer in a Neural Network with inputs that are zero mean/unit variance - and this is basically what they like! But BatchNorm consists of one more step which makes this algorithm really powerful. Let's take a look at the BatchNorm Algorithm:
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/bn_algorithm.PNG">
@@ -33,7 +33,7 @@ Uff, sounds tough, eh? I will maybe write another post about this topic but for 
 
 ## Computational Graph of Batch Normalization Layer
 
-I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explenation through computational graphs. These Graphs are a good way to visualize the computational flow of fairly complex functions by small, piecewise differentiable subfunctions. For the BatchNorm-Layer it would look something like this:
+I think one of the things I learned from the cs231n class that helped me most understanding backpropagation was the explanation through computational graphs. These Graphs are a good way to visualize the computational flow of fairly complex functions by small, piecewise differentiable subfunctions. For the BatchNorm-Layer it would look something like this:
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/BNcircuit.png">
@@ -41,19 +41,19 @@ I think one of the things I learned from the cs231n class that helped me most un
   </div>
 </div>
 
-I think for all, who followed the course or who know the technique the forwardpass (black arrows) is easy and straightforward to read. From input `x` we calculate the mean of every dimension in the feature space and then substract this vector of mean values from every training example. With this done, following the lower branch, we calculate the per-dimension variance and with that the entire denominator of the normalization equation. Next we invert it and multiply it with difference of inputs and means and we have `x_normalized`. The last two blobs on the left perform the squashing by multiplying with the input `gamma` and finally adding `beta`. Et voilà, we have our Batch-Normalized output.
+I think for all, who followed the course or who know the technique the forwardpass (black arrows) is easy and straightforward to read. From input `x` we calculate the mean of every dimension in the feature space and then subtract this vector of mean values from every training example. With this done, following the lower branch, we calculate the per-dimension variance and with that the entire denominator of the normalization equation. Next we invert it and multiply it with difference of inputs and means and we have `x_normalized`. The last two blobs on the left perform the squashing by multiplying with the input `gamma` and finally adding `beta`. Et voilà, we have our Batch-Normalized output.
 
-A vanilla implemantation of the forwardpass might look like this:
+A vanilla implementation of the forwardpass might look like this:
 
 ```python
 def batchnorm_forward(x, gamma, beta, eps):
 
   N, D = x.shape
 
-  #step1: calciulate mean
+  #step1: calculate mean
   mu = 1./N * np.sum(x, axis = 0)
 
-  #step2: substract mean vector of every trainings example
+  #step2: subtract mean vector of every trainings example
   xmu = x - mu
 
   #step3: following the lower branch - calculation denominator
@@ -83,17 +83,17 @@ def batchnorm_forward(x, gamma, beta, eps):
   return out, cache
 ```
 
-Note that for the excercise of the cs231n class we had to do a little more (calculate running mean and variance as well as implement different forward pass for trainings mode and test mode) but for the explenation of the backwardpass this piece of code will work.
+Note that for the exercise of the cs231n class we had to do a little more (calculate running mean and variance as well as implement different forward pass for trainings mode and test mode) but for the explanation of the backwardpass this piece of code will work.
 In the cache variable we store some stuff that we need for the computing of the backwardpass, as you will see now!
 
 ## The power of Chain Rule for backpropagation
 
-For all who kept on reading until now (congratualations!!), we are close to arrive at the backward pass of the BatchNorm-Layer.
-To fully understand the channeling of the gradient backwards through the BatchNorm-Layer you should have some basic understanding of what the [Chain rule](https://en.wikipedia.org/wiki/Chain_rule) is. As a little refresh follows one figure that examplifies the use of chain rule for the backward pass in computational graphs.
+For all who kept on reading until now (congratulations!!), we are close to arrive at the backward pass of the BatchNorm-Layer.
+To fully understand the channeling of the gradient backwards through the BatchNorm-Layer you should have some basic understanding of what the [Chain rule](https://en.wikipedia.org/wiki/Chain_rule) is. As a little refresh follows one figure that exemplifies the use of chain rule for the backward pass in computational graphs.
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/chainrule_example.PNG">
-  <div class="figcaption"><br>The forwardpass on the left in calculates `z` as a function `f(x,y)` using the input variables `x` and `y` (This could literally be any function, examples are shown in the BatchNorm-Graph above). The right side of the figures shows the backwardpass. Recieving `dL/dz`, the gradient of the loss function with respect to `z` from above, the gradients of `x` and `y` on the loss function can be calculate by applying the chain rule, as shown in the figure.<br>
+  <div class="figcaption"><br>The forwardpass on the left in calculates `z` as a function `f(x,y)` using the input variables `x` and `y` (This could literally be any function, examples are shown in the BatchNorm-Graph above). The right side of the figures shows the backwardpass. Receiving `dL/dz`, the gradient of the loss function with respect to `z` from above, the gradients of `x` and `y` on the loss function can be calculate by applying the chain rule, as shown in the figure.<br>
   </div>
 </div>
 
@@ -107,7 +107,7 @@ In the comments of aboves code snippet I already numbered the computational step
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step9.png">
-  <div class="figcaption"><br>Backwardpass through the last summation gate of the BatchNorm-Layer. Enclosured in brackets I put the dimensions of Input/Output<br>
+  <div class="figcaption"><br>Backwardpass through the last summation gate of the BatchNorm-Layer. Enclosed in brackets I put the dimensions of Input/Output<br>
   </div>
 </div>
 Recall that the derivation of a function `f = x + y` with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. And because the summation of `beta` during the forward pass is a row-wise summation, during the backward pass we need to sum up the gradient over all of its columns (take a look at the dimensions). So after the first step of backpropagation we already got the gradient for one learnable parameter: `beta`
@@ -125,7 +125,7 @@ For any function `f = x * y` the derivation with respect to one of the inputs is
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step7.png">
-  <div class="figcaption"><br>This step during the forward pass was the final step of the normalization combining the two branches (nominator and denominator) of the computational graph. During the backward pass we will calculate the gradients that will flow seperatly through these two branches backwards.<br>
+  <div class="figcaption"><br>This step during the forward pass was the final step of the normalization combining the two branches (nominator and denominator) of the computational graph. During the backward pass we will calculate the gradients that will flow separately through these two branches backwards.<br>
   </div>
 </div>
 It's basically the exact same operation, so lets not waste much time and continue. The two needed variables `xmu` and `ivar` for this step are also stored `cache` variable we pass to the backprop function. (And again: This is one of the main advantages of computational graphs. Splitting complex functions into a handful of simple basic operations. And like this you have a lot of repetitions!)
@@ -146,7 +146,7 @@ The local gradient is visualized in the image and should not be hard to derive b
   <div class="figcaption"><br>Again "one input-one output". This node calculates during the forward pass the denominator of the normalization.<br>
   </div>
 </div>
-The derivation of the local gradient is little magic and should need no explenation. `var` and `eps` are also passed in the `cache`. No more words to lose!
+The derivation of the local gradient is little magic and should need no explanation. `var` and `eps` are also passed in the `cache`. No more words to lose!
 
 ### Step 4
 
@@ -155,7 +155,7 @@ The derivation of the local gradient is little magic and should need no explenat
   <div class="figcaption"><br>Also a "one input-one output" node. During the forward pass the output of this node is the variance of each feature `d for d in [1...D]`.<br>
   </div>
 </div>
-The derivation of this steps local gradient might look unclear at the very first glance. But it's not that hard at the end. Let's recall that a normal summation gate (see step 9) during the backward pass only transfers the gradient unchanged and evenly to the inputs. With that in mind, it should not be that hard to conclude, that a column-wise summation during the forward pass, during the backward pass means that we evenly distribute the gradient over all rows for each column. And not much more is done here. We create a matrix of ones with the same shape as the input `sq` of the forward pass, devide it element-wise by the number of rows (thats the local gradient) and multiply it by the gradient from above.
+The derivation of this steps local gradient might look unclear at the very first glance. But it's not that hard at the end. Let's recall that a normal summation gate (see step 9) during the backward pass only transfers the gradient unchanged and evenly to the inputs. With that in mind, it should not be that hard to conclude, that a column-wise summation during the forward pass, during the backward pass means that we evenly distribute the gradient over all rows for each column. And not much more is done here. We create a matrix of ones with the same shape as the input `sq` of the forward pass, divide it element-wise by the number of rows (thats the local gradient) and multiply it by the gradient from above.
 
 ### Step 3
 
@@ -170,10 +170,10 @@ I think for all who followed until here, there is not much to explain for the de
 
 <div class="fig figcenter fighighlight">
   <img src="/images/bn_backpass/step2.png">
-  <div class="figcaption"><br>Now this looks like a more fun gate! two inputs-two outputs! This node substracts the per-feature mean row-wise of each trainings example `n for n in [1...N]` during the forward pass.<br>
+  <div class="figcaption"><br>Now this looks like a more fun gate! two inputs-two outputs! This node subtracts the per-feature mean row-wise of each trainings example `n for n in [1...N]` during the forward pass.<br>
   </div>
 </div>
-Okay lets see. One of the definitions of backprogatation and computational graphs is, that whenever we have two gradients coming to one node, we simply add them up. Knowing this, the rest is little magic as the local gradient for a substraction is as hard to derive as for a summation. Note that for `mu` we have to sum up the gradients over the dimension `N` (as we did before for `gamma` and `beta`).
+Okay lets see. One of the definitions of backprogatation and computational graphs is, that whenever we have two gradients coming to one node, we simply add them up. Knowing this, the rest is little magic as the local gradient for a subtraction is as hard to derive as for a summation. Note that for `mu` we have to sum up the gradients over the dimension `N` (as we did before for `gamma` and `beta`).
 
 ### Step 1
 <div class="fig figcenter fighighlight">
@@ -190,7 +190,7 @@ As this node executes the exact same operation as the one explained in step 4, a
   <div class="figcaption"><br>
   </div>
 </div>
-I only added this image to again visualize that at the very end we need to sum up the gradients `dx1` and `dx2` to get the final gradient `dx`. This matrix contains the gradient of the loss function with respect to the input of the BatchNorm-Layer. This gradient `dx` is also what we give as input to the backwardpass of the next layer, as for this layer we recieve `dout` from the layer above.
+I only added this image to again visualize that at the very end we need to sum up the gradients `dx1` and `dx2` to get the final gradient `dx`. This matrix contains the gradient of the loss function with respect to the input of the BatchNorm-Layer. This gradient `dx` is also what we give as input to the backwardpass of the next layer, as for this layer we receive `dout` from the layer above.
 
 # Naive implemantation of the backward pass through the BatchNorm-Layer
 
@@ -243,7 +243,7 @@ def batchnorm_backward(dout, cache):
 
 ```
 
-**Note:** This is the naive implemantation of the backward pass. There exists an alternative implemantion, which is even a bit faster, but I personally found the naive implemantation way better for the purpose of understanding backpropagation through the BatchNorm-Layer. [This well written blog post](http://cthorey.github.io./backpropagation/) gives a more detailed derivation of the alternative (faster) implemantation. However, there is a much more calculus envolved. But once you have understood the naive implemantation, it might not be to hard to follow.
+**Note:** This is the naive implementation of the backward pass. There exists an alternative implementation, which is even a bit faster, but I personally found the naive implementation way better for the purpose of understanding backpropagation through the BatchNorm-Layer. [This well written blog post](http://cthorey.github.io./backpropagation/) gives a more detailed derivation of the alternative (faster) implementation. However, there is a much more calculus involved. But once you have understood the naive implementation, it might not be to hard to follow.
 
 # Some final words
 
