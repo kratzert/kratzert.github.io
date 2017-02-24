@@ -283,6 +283,32 @@ pre {
 .post-link {
   font-size: 24px; }
 
+.figcenter {
+  text-align: center; }
+
+.fig img {
+  max-width: 98%; }
+
+.figleft img {
+  max-width: 50%;
+  float: left;
+  margin-right: 20px; }
+
+.figleft svg {
+  float: left;
+  margin-right: 20px; }
+
+.fighighlight {
+  padding: 20px 4px 20px 4px;
+  border-bottom: 1px solid #999;
+  border-top: 1px solid #999; }
+
+.figcaption {
+  font-weight: 400;
+  font-size: 14px;
+  color: #575651;
+  text-align: justify; }
+
 /**
  * Posts
  */
