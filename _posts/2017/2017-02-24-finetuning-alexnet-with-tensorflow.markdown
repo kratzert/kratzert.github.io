@@ -3,6 +3,7 @@ layout: post
 title: Finetuning AlexNet with TensorFlow
 date: '2017-02-24 10:11'
 excerpt: This blog post will guide you on how to finetune AlexNet with pure TensorFlow.
+comments: true
 ---
 
 After over one year I finally found time and leisure to write my next article. This time about finetuning [AlexNet](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf) in pure [TensorFlow 1.0](https://www.tensorflow.org/install/migration). "AlexNet?" you might say, "So 2012'ish!" you might say. Well here are some reasons why I thought it's worth doing anyway:
