@@ -14,7 +14,7 @@ After over one year I finally found time and leisure to write my next article. T
 
 ## Disclaimer
 
-After finishing to write this article I ended up having written another very long post. Basically it is divided into two parts: In the first part I created a class to define the model graph of AlexNet together with a function to load the pretrained weights and in the second part how to actually use this class to finetune AlexNet on a new dataset. Although I recommend reading the first part, klick [here](#finetune) to skip the first part and go directly on how to finetune AlexNet.
+After finishing to write this article I ended up having written another very long post. Basically it is divided into two parts: In the first part I created a class to define the model graph of AlexNet together with a function to load the pretrained weights and in the second part how to actually use this class to finetune AlexNet on a new dataset. Although I recommend reading the first part, click [here](#finetune) to skip the first part and go directly on how to finetune AlexNet.
 
 And next: This is not an introduction neither to TensorFlow nor to finetuning or convolutional networks in general. I'll explain most of the steps you need to do, but basic knowledge of TensorFlow and machine/deep learning is required to fully understand everything.
 
