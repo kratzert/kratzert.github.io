@@ -14,7 +14,7 @@ As a person who does a lot of autonomous learning, the Internet in these days of
 - [Coursera - Machine Learning by Stanford University](https://www.coursera.org/learn/machine-learning/) - online class by Andrew Ng (highly recommended)
 - [Undergraduate machine learning at UBC 2012](https://www.youtube.com/playlist?list=PLE6Wd9FR--Ecf_5nCbnSQMHqORpiChfJf) - by Nando de Freitas (33 lectures)
 - [Deep Learning at Oxford 2015](https://www.youtube.com/playlist?list=PLE6Wd9FR--EfW8dtjAuPoTuPcqmOV53Fu) - by Nando de Freitas (16 lectures)
-- [CS231n - CNNs for Visual Recognition](https://www.youtube.com/playlist?list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC) - by Fei-Fei Li and mainly Andrej Karpathy ([Overview](http://cs231n.github.io/))
+- [CS231n - CNNs for Visual Recognition](https://www.youtube.com/playlist?list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC) - by Fei-Fei Li and mainly Andrej Karpathy ([Overview](https://cs231n.github.io/))
 - [Neural networks class - Université de Sherbrook](https://www.youtube.com/playlist?list=PL6Xpj9I5qXYEcOhn7TqghAJ6NAPrNmUBH) by Hugo Larochelle (92 mostly short videos)
 - [Deep Learning Talk MLSS 2014](https://www.youtube.com/playlist?list=PLf6wdSFWPsFiPs618yY1zaQOxlWiqnXsO) - by Yoshua Bengio at MLSS 2014 (3 Parts)
 
@@ -26,10 +26,10 @@ As a person who does a lot of autonomous learning, the Internet in these days of
 - [The Art of neural networks](https://www.youtube.com/watch?v=0qVOUD76JOg) - Mike Tyka talking about the evolution of art and programming
 
 #### Blogs/Sites
-- [Andrej Karpathys Blog](kaparthy.github.io) - Blog with a lot of well written articles mainly about CV and CNNs
-- [CS231n](cs231n.github.io) - corresponding site to the CS231n course from Standford university. Each topic covered in an article.
+- [Andrej Karpathys Blog](https://karpathy.github.io) - Blog with a lot of well written articles mainly about CV and CNNs
+- [CS231n](https://cs231n.github.io) - corresponding site to the CS231n course from Standford university. Each topic covered in an article.
 - [UFLDL Tutorial](http://ufldl.stanford.edu/tutorial/) - Unsupervised Feature Learning and Deep Learning Tutorials by Standford University
-- [Understanding LSTMs](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) - Some nice write up about LSTM-Nets by Christopher Olah
+- [Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) - Some nice write up about LSTM-Nets by Christopher Olah
 
 
 ### Programming
