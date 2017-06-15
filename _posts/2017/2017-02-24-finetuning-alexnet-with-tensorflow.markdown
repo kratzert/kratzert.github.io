@@ -6,6 +6,11 @@ excerpt: This blog post will guide you on how to finetune AlexNet with pure Tens
 comments: true
 ---
 
+## Update 15.05.2017
+I updated the code of the repository to work with TensorFlows [new input pipeline](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data). Read my [other blogpost](https://kratzert.github.io/2017/06/15/example_of_tensorflows_new_input_pipeline.html) for an explanation of this new feature coming with TensorFlows version >= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.
+
+<br>
+<br>
 After over one year I finally found time and leisure to write my next article. This time about finetuning [AlexNet](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf) in pure [TensorFlow 1.0](https://www.tensorflow.org/install/migration). "AlexNet?" you might say, "So 2012'ish!" you might say. Well here are some reasons why I thought it's worth doing anyway:
 
 - Albeit there exist many How-To's, most of the newer once are covering finetuning VGG or Inception Models and not AlexNet. Although the idea behind finetuning is the same, the major difference is, that Tensorflow (as well as Keras) already ship with VGG or Inception classes and include the weights (pretrained on ImageNet). For the AlexNet model, we have to do a bit more on our own.
@@ -36,7 +41,7 @@ Noteworthy are the splitting of some of the convolutional layer (layer two, four
 
 So lets get started:
 For the model we'll create a class with the following structure
-(The entire code can be found in [here](https://github.com/kratzert/finetune_alexnet_with_tensorflow) on github)
+(The entire code can be found in [here](https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d) on github). **Note:** Read the update message above for a newer version.
 
 ```python
 class AlexNet(object):
@@ -255,7 +260,7 @@ To test if the model is implemented correctly and the weights are all assigned p
 
 <div class="fig figcenter fighighlight">
   <img src="/images/finetune_alexnet/alexnet_test.png">
-  <div class="figcaption"><br> Three images taken from the <a href="image-net.org/challenges/LSVRC/2014/browse-synsets">ImageNet Database</a> and tested with the implemented AlexNet class. IPython notebook to reproduce the results can be found <a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow">here</a>.<br>
+  <div class="figcaption"><br> Three images taken from the <a href="image-net.org/challenges/LSVRC/2014/browse-synsets">ImageNet Database</a> and tested with the implemented AlexNet class. IPython notebook to reproduce the results can be found <a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d">here</a>.<br>
   </div>
 </div>
 
@@ -271,7 +276,7 @@ So after a long read, you finally arrived at the 'core'-part of this blog articl
   </div>
 </div>
 
-I further splitted this images into a training, validation and test set (70/15/15) and created `.txt` files for each subset containing the path to the image and the class label. Having this text files I created yet another class serving as image data generator (like the one of Keras for example). I know there are smarter ways, but for another project I needed to take care of exactly how the images are loaded and preprocessed and already having this script, I simply copied it for this tutorial. The code can be founded in the [github repo](https://github.com/kratzert/finetune_alexnet_with_tensorflow).
+I further splitted this images into a training, validation and test set (70/15/15) and created `.txt` files for each subset containing the path to the image and the class label. Having this text files I created yet another class serving as image data generator (like the one of Keras for example). I know there are smarter ways, but for another project I needed to take care of exactly how the images are loaded and preprocessed and already having this script, I simply copied it for this tutorial. The code can be founded in the [github repo](https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d).
 And because I personally like more scripts for educational purpose, I'll not write the code as a callable function but as a script you should open and look at, to better understand what happens.
 
 ### The configuration part
@@ -490,4 +495,4 @@ saver.restore(sess, "/path/to/checkpoint/model.ckpt")
 ## Some last Note
 You don't have to use my `ImageDataGenerator` class to use this script (it might be badly inefficient). Just find your own way to provide batches of images and labels to the training op and implement it into the script.
 
-If you have any further questions, feel free to ask. And again, all the code can be found on [github](https://github.com/kratzert/finetune_alexnet_with_tensorflow).
+If you have any further questions, feel free to ask. And again, all the code can be found on [github](https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d). But note, that I updated the code, as describe at the top, to work with the new input pipeline of TensorFlow 1.12rc0. If you want to use the [updated version](https://github.com/kratzert/finetune_alexnet_with_tensorflow) make sure you updated your TensorFlow version.

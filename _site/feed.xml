@@ -6,13 +6,184 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 24 Feb 2017 17:20:59 +0100</pubDate>
-    <lastBuildDate>Fri, 24 Feb 2017 17:20:59 +0100</lastBuildDate>
+    <pubDate>Thu, 15 Jun 2017 21:18:44 +0200</pubDate>
+    <lastBuildDate>Thu, 15 Jun 2017 21:18:44 +0200</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
     
       <item>
+        <title>Example of TensorFlows new Input Pipeline</title>
+        <description>&lt;p&gt;During the time I wrote my last article about &lt;a href=&quot;https://kratzert.github.io/2017/02/24/finetuning-alexnet-with-tensorflow.html&quot;&gt;finetuning AlexNet with TensorFlow&lt;/a&gt; I read about the &lt;a href=&quot;https://www.tensorflow.org/performance/performance_guide&quot;&gt;best practices for optimizing performance in TensorFlow&lt;/a&gt;. There are several things I made different to these practices but I think the one that had the biggest effect on the performance was everything around the input pipeline. With the new Version of TensorFlow the &lt;a href=&quot;https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset API&lt;/code&gt;&lt;/a&gt; was introduced and provides us with a good and relatively easy way to write our own input pipeline using nothing more than TensorFlow. While you can potentially use this Datasets for any kind of input data, I will use images for the use case of this article. By the end of this article you will hopefully be able to use the new &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt; API for you own project and decrease the computation time needed to train you model.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-we-had-so-far&quot;&gt;What we had so far?&lt;/h2&gt;
+
+&lt;p&gt;What I used so far (and saw the most around the Internet) was loading images and preprocessing them with external libraries (e.g. &lt;a href=&quot;http://opencv.org/&quot;&gt;OpenCV&lt;/a&gt;) and feeding them into the model using the &lt;code class=&quot;highlighter-rouge&quot;&gt;feed_dict&lt;/code&gt; method. Well, in the performance guide they &lt;a href=&quot;https://www.tensorflow.org/performance/performance_guide#utilize_queues_for_reading_data&quot;&gt;say&lt;/a&gt;, that this method is suboptimal. They propose using &lt;a href=&quot;https://www.tensorflow.org/versions/r1.2/api_guides/python/io_ops#Queues&quot;&gt;queues&lt;/a&gt;. I spend a lot of time to work myself into the usage of these queues (and already started to write an article about this topic) but to be honest it was quite a pain to work with them. Also I liked the idea of queues, they had some problems I couldn’t solve (e.g. training and validating a model in the same session by switching between different input queues, one for training and one for validation data).&lt;/p&gt;
+
+&lt;h2 id=&quot;what-we-got-now&quot;&gt;What we got now&lt;/h2&gt;
+
+&lt;p&gt;For me, everything started to change when I found &lt;a href=&quot;https://github.com/tensorflow/tensorflow/issues/7951&quot;&gt;this issue&lt;/a&gt;, where they announced to design a new input pipeline API. I wasn’t by far the only one who was struggling with the queue-way-of-doing-it. And as it seemed, they where aware of the fact and wanted to create a better input pipeline API (well, thanks to competition I would say..).&lt;/p&gt;
+
+&lt;p&gt;The core of the new input pipeline is the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt; (and maybe the &lt;code class=&quot;highlighter-rouge&quot;&gt;Iterator&lt;/code&gt;). A &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt; is a collection of &lt;code class=&quot;highlighter-rouge&quot;&gt;elements&lt;/code&gt;, each with the same structure, where one element can be one of more tensors. The different tensors inside an element are called &lt;code class=&quot;highlighter-rouge&quot;&gt;components&lt;/code&gt;. Each component has a certain data type and shape, but different components inside one element can have different data types and shapes. For illustration purpose I’ll give an example in pseudo-code, where I represent one dataset as Python-List and an element as a Tuple&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# This is pseudo code
+
+dataset1 =  [ (img1, [1, 0, 0]),
+              (img2, [0, 1, 0]),
+              (img3, [1, 0, 0]),
+              (img4, [0, 0, 1]),
+              (img5, [0, 1, 0])
+            ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;dataset1&lt;/code&gt; would be a TensorFlow &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt;, then each Tuple is an &lt;code class=&quot;highlighter-rouge&quot;&gt;element&lt;/code&gt; consisting of two &lt;code class=&quot;highlighter-rouge&quot;&gt;components&lt;/code&gt;. The first component is a 3D tensors containing an image (for visibility I just gave them a name and didn’t try to write a three times nested list) and the second component is a vector containing symbolically the one-hot-encoding class vector. The image component would have a data type of &lt;code class=&quot;highlighter-rouge&quot;&gt;tf.float32&lt;/code&gt;, where as the data type of the vector would be some &lt;code class=&quot;highlighter-rouge&quot;&gt;tf.int&lt;/code&gt;.
+We could now use an &lt;code class=&quot;highlighter-rouge&quot;&gt;Iterator&lt;/code&gt; to get element by element from this dataset. How you get batches of data will be shown later in this tutorial.&lt;/p&gt;
+
+&lt;h2 id=&quot;toy-example-of-the-input-pipeline&quot;&gt;Toy example of the input pipeline&lt;/h2&gt;
+
+&lt;p&gt;I think the concept can be better explained given some simple toy example. Note, that there are many different ways how you can create a dataset but I’ll talk only about the one I used the most for my image classification models (for a full list of possibilities look &lt;a href=&quot;https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data&quot;&gt;here&lt;/a&gt;). There I usually have text file storing the path to the images and there class label in one row. Imagine you have all paths and labels read in into two different lists, this is were we start:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tensorflow&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tf&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tensorflow.contrib.data&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dataset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterator&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Toy data&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;train_imgs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'train/img1.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'train/img2.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;'train/img3.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'train/img4.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;'train/img5.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'train/img6.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;train_labels&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;val_imgs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'val/img1.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'val/img2.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                        &lt;span class=&quot;s&quot;&gt;'val/img3.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'val/img4.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;val_labels&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# create TensorFlow Dataset objects&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dataset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_tensor_slices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train_imgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;train_labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;val_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dataset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_tensor_slices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val_imgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val_labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# create TensorFlow Iterator object&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_structure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                                   &lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_shapes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;next_element&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# create two initialization ops to switch between the datasets&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;training_init_op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;make_initializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;validation_init_op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;make_initializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sess&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# initialize the iterator on the training data&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;training_init_op&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# get each element of the training dataset until the end is reached&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;elem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next_element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutOfRangeError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;End of training dataset.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# initialize the iterator on the validation data&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;validation_init_op&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# get each element of the validation dataset until the end is reached&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;elem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next_element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OutOfRangeError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;End of training dataset.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This should print:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(b'train/img1.png', 0)
+(b'train/img2.png', 0)
+(b'train/img3.png', 0)
+(b'train/img4.png', 1)
+(b'train/img5.png', 1)
+(b'train/img6.png', 1)
+End of training dataset.
+(b'val/img1.png', 0)
+(b'val/img2.png', 0)
+(b'val/img3.png', 1)
+(b'val/img4.png', 1)
+End of training dataset.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Isn’t that wonderful? I don’t know if you have played around with TensorFlows Queues but this is simple, clear and works like a charm.&lt;/p&gt;
+
+&lt;h2 id=&quot;working-with-images&quot;&gt;Working with images&lt;/h2&gt;
+
+&lt;p&gt;Of course it’s not of interest for us to print out image paths and label numbers. Instead what we would like to do is loading the image to which the path points, maybe doing some preprocessing (and augmentation) and converting the label number into a &lt;a href=&quot;https://en.wikipedia.org/wiki/One-hot&quot;&gt;one-hot-encoding&lt;/a&gt;, as we need them for training any image classification network. This can be achieved by writing a parsing function and using the &lt;code class=&quot;highlighter-rouge&quot;&gt;.map(f)&lt;/code&gt; functionality of the &lt;code class=&quot;highlighter-rouge&quot;&gt;Datasets&lt;/code&gt;. The &lt;code class=&quot;highlighter-rouge&quot;&gt;.map(f)&lt;/code&gt; function creates a new dataset by applying a function &lt;code class=&quot;highlighter-rouge&quot;&gt;f&lt;/code&gt; to every element of the original dataset. This function could be any Python function, also including other Python libraries, but regarding performance it’s recommended to use only Tensorflow functionality. We don’t want anything special for the moment, so this could be our parsing function:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tensorflow&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tf&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# let's assume we have two classes in our dataset&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;NUM_CLASSES&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;input_parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img_path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# convert the label to one-hot encoding&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;one_hot&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;one_hot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NUM_CLASSES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# read the img from file&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;img_file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;img_decoded&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decode_image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;channels&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_decoded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;one_hot&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Taking the toy example from above, all we have to add is this line:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#e.g. for the training dataset&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Now the first component of each element in the dataset, which we obtain by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;next_element&lt;/code&gt; wouldn’t be the string to the image path, it would be a 3D-tensor storing the image. And for the second component, we wouldn’t get the label number, but the one-hot-encoding. Pretty neat, isn’t it?&lt;/p&gt;
+
+&lt;p&gt;For the practical use case it would make sense to have two different parsing functions. One function would be used for images from the training set, for which we often perform &lt;a href=&quot;https://en.wikipedia.org/wiki/Convolutional_neural_network#Artificial_data&quot;&gt;data augmentation &lt;/a&gt; additional to resizing (and maybe centering). The other function would logically be for the inference case, for which we only want to load the images and resize them according to the expected model input (and eventually center as well).&lt;/p&gt;
+
+&lt;p&gt;Usually we also don’t want a single image to train our model, but mini-batches for various images. With the new &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt; API this is also a one-lines:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;dataset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;batch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;batch_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;As with the &lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; function from above, this can be done by calling the &lt;code class=&quot;highlighter-rouge&quot;&gt;batch(n)&lt;/code&gt; function on the dataset, which will create a new dataset with batches of &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; elements per batch.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Attention:&lt;/strong&gt; The only functionality I’m struggling with, is the &lt;code class=&quot;highlighter-rouge&quot;&gt;.shuffle(buffer_size)&lt;/code&gt; function. This, like the &lt;code class=&quot;highlighter-rouge&quot;&gt;map()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.batch()&lt;/code&gt; function, can be applied on a dataset, to create a new dataset, loads the first &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer_size&lt;/code&gt; elements into memory and shuffles them. &lt;a href=&quot;https://github.com/tensorflow/tensorflow/issues/7951#issuecomment-305435143&quot;&gt;Here&lt;/a&gt; I explained the problem, given an example, that can arise from this function, that we as users need to be aware of. But in short: If your initial list of samples (image path + label) is ordered, so that you all samples of the first class in the beginning, followed by all samples of the second class etc., and your &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer_size&lt;/code&gt; is smaller than the number of samples you have of each class, you will have batches with samples of only one class and your model will not train. Therefore we need to take care of an initial shuffling ourselves and not rely on TensorFlows shuffling.&lt;/p&gt;
+
+&lt;h2 id=&quot;performance-comparison&quot;&gt;Performance comparison&lt;/h2&gt;
+
+&lt;p&gt;To measure the performance using the new input pipeline from TensorFlow instead of external libraries, I adapted my &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d&quot;&gt;code&lt;/a&gt; from the &lt;a href=&quot;https://kratzert.github.io/2017/02/24/finetuning-alexnet-with-tensorflow.html&quot;&gt;finetuning AlexNet with TensorFlow article&lt;/a&gt;. Previously I used OpenCV to load and preprocess the images whereas now the input pipeline (implemented in the &lt;code class=&quot;highlighter-rouge&quot;&gt;datagenerator.py&lt;/code&gt; file) uses only TensorFlow functions. All parameters, such as batch_size, trainable layers etc. stayed the same for both runs.&lt;/p&gt;
+
+&lt;div class=&quot;fig figcenter fighighlight&quot;&gt;
+  &lt;img src=&quot;/images/input_pipeline/comparison.png&quot; /&gt;
+  &lt;div class=&quot;figcaption&quot;&gt;&lt;br /&gt;Left side shows the time per batch using the pure TensorFlow input pipeline ([code](https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/master/datagenerator.py)). On the right is the result for the old input pipeline ([code](https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d/datagenerator.py)) using OpenCV.&lt;br /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To be honest, I was a bit disappointed when I saw these numbers. There effect is negligible, but hey! we have our input pipeline with nothing more than TensorFlow. I didn’t do much more tests, but maybe the positive effect increases if we apply more functionality to the input pipeline (such as random augmentation).&lt;/p&gt;
+
+&lt;p&gt;As it seems, the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dataset&lt;/code&gt; is not based on Queues. This leads to the old problem, that we can’t use CPU and GPU efficiently, meaning that while the GPU processes on batch of data the CPU loads and preprocesses data in parallel. So when the GPU needs a new batch of data, the data is already in memory and can be passed immediately to the GPU. This can be achived with TensorFlow Queues but than you can’t train and validate you model in one session (at least I couldn’t find a way to do so).&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;The main advantage of the new input pipeline API from Tensorflow is in my eyes the clear structure and the simplicity. It’s pretty easy to add any functionality you want, as well as switching between different input data streams. Regarding the Performance I couldn’t find much of a speedup, but we’ll see what further development of TensorFlow brings.&lt;/p&gt;
+
+&lt;p&gt;Regarding code examples: I update the code of the &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;GitHub repository&lt;/a&gt; of my last article, so that you can find an example on how to finetune AlexNet using the new input pipeline there.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 15 Jun 2017 15:56:00 +0200</pubDate>
+        <link>http://localhost:4000/2017/06/15/example-of-tensorflows-new-input-pipeline.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/15/example-of-tensorflows-new-input-pipeline.html</guid>
+        
+        
+      </item>
+    
+      <item>
         <title>Finetuning AlexNet with TensorFlow</title>
-        <description>&lt;p&gt;After over one year I finally found time and leisure to write my next article. This time about finetuning &lt;a href=&quot;http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf&quot;&gt;AlexNet&lt;/a&gt; in pure &lt;a href=&quot;https://www.tensorflow.org/install/migration&quot;&gt;TensorFlow 1.0&lt;/a&gt;. “AlexNet?” you might say, “So 2012’ish!” you might say. Well here are some reasons why I thought it’s worth doing anyway:&lt;/p&gt;
+        <description>&lt;h2 id=&quot;update-15052017&quot;&gt;Update 15.05.2017&lt;/h2&gt;
+&lt;p&gt;I updated the code of the repository to work with TensorFlows &lt;a href=&quot;https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data&quot;&gt;new input pipeline&lt;/a&gt;. Read my &lt;a href=&quot;https://kratzert.github.io/2017/06/15/example_of_tensorflows_new_input_pipeline.html&quot;&gt;other blogpost&lt;/a&gt; for an explanation of this new feature coming with TensorFlows version &amp;gt;= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;
+After over one year I finally found time and leisure to write my next article. This time about finetuning &lt;a href=&quot;http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf&quot;&gt;AlexNet&lt;/a&gt; in pure &lt;a href=&quot;https://www.tensorflow.org/install/migration&quot;&gt;TensorFlow 1.0&lt;/a&gt;. “AlexNet?” you might say, “So 2012’ish!” you might say. Well here are some reasons why I thought it’s worth doing anyway:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Albeit there exist many How-To’s, most of the newer once are covering finetuning VGG or Inception Models and not AlexNet. Although the idea behind finetuning is the same, the major difference is, that Tensorflow (as well as Keras) already ship with VGG or Inception classes and include the weights (pretrained on ImageNet). For the AlexNet model, we have to do a bit more on our own.&lt;/li&gt;
@@ -23,7 +194,7 @@
 
 &lt;h2 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;/h2&gt;
 
-&lt;p&gt;After finishing to write this article I ended up having written another very long post. Basically it is divided into two parts: In the first part I created a class to define the model graph of AlexNet together with a function to load the pretrained weights and in the second part how to actually use this class to finetune AlexNet on a new dataset. Although I recommend reading the first part, klick &lt;a href=&quot;#finetune&quot;&gt;here&lt;/a&gt; to skip the first part and go directly on how to finetune AlexNet.&lt;/p&gt;
+&lt;p&gt;After finishing to write this article I ended up having written another very long post. Basically it is divided into two parts: In the first part I created a class to define the model graph of AlexNet together with a function to load the pretrained weights and in the second part how to actually use this class to finetune AlexNet on a new dataset. Although I recommend reading the first part, click &lt;a href=&quot;#finetune&quot;&gt;here&lt;/a&gt; to skip the first part and go directly on how to finetune AlexNet.&lt;/p&gt;
 
 &lt;p&gt;And next: This is not an introduction neither to TensorFlow nor to finetuning or convolutional networks in general. I’ll explain most of the steps you need to do, but basic knowledge of TensorFlow and machine/deep learning is required to fully understand everything.&lt;/p&gt;
 
@@ -44,7 +215,7 @@ Let’s first look onto the model structure as shown in the original paper:&lt;/
 
 &lt;p&gt;So lets get started:
 For the model we’ll create a class with the following structure
-(The entire code can be found in &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;here&lt;/a&gt; on github)&lt;/p&gt;
+(The entire code can be found in &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d&quot;&gt;here&lt;/a&gt; on github). &lt;strong&gt;Note:&lt;/strong&gt; Read the update message above for a newer version.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AlexNet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
 
@@ -263,7 +434,7 @@ Anyway, I’ll write the function for the weights downloadable from &lt;a href=&
 
 &lt;div class=&quot;fig figcenter fighighlight&quot;&gt;
   &lt;img src=&quot;/images/finetune_alexnet/alexnet_test.png&quot; /&gt;
-  &lt;div class=&quot;figcaption&quot;&gt;&lt;br /&gt; Three images taken from the &lt;a href=&quot;image-net.org/challenges/LSVRC/2014/browse-synsets&quot;&gt;ImageNet Database&lt;/a&gt; and tested with the implemented AlexNet class. IPython notebook to reproduce the results can be found &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;here&lt;/a&gt;.&lt;br /&gt;
+  &lt;div class=&quot;figcaption&quot;&gt;&lt;br /&gt; Three images taken from the &lt;a href=&quot;image-net.org/challenges/LSVRC/2014/browse-synsets&quot;&gt;ImageNet Database&lt;/a&gt; and tested with the implemented AlexNet class. IPython notebook to reproduce the results can be found &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d&quot;&gt;here&lt;/a&gt;.&lt;br /&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 
@@ -279,7 +450,7 @@ Anyway, I’ll write the function for the weights downloadable from &lt;a href=&
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;p&gt;I further splitted this images into a training, validation and test set (70/15/15) and created &lt;code class=&quot;highlighter-rouge&quot;&gt;.txt&lt;/code&gt; files for each subset containing the path to the image and the class label. Having this text files I created yet another class serving as image data generator (like the one of Keras for example). I know there are smarter ways, but for another project I needed to take care of exactly how the images are loaded and preprocessed and already having this script, I simply copied it for this tutorial. The code can be founded in the &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;github repo&lt;/a&gt;.
+&lt;p&gt;I further splitted this images into a training, validation and test set (70/15/15) and created &lt;code class=&quot;highlighter-rouge&quot;&gt;.txt&lt;/code&gt; files for each subset containing the path to the image and the class label. Having this text files I created yet another class serving as image data generator (like the one of Keras for example). I know there are smarter ways, but for another project I needed to take care of exactly how the images are loaded and preprocessed and already having this script, I simply copied it for this tutorial. The code can be founded in the &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d&quot;&gt;github repo&lt;/a&gt;.
 And because I personally like more scripts for educational purpose, I’ll not write the code as a callable function but as a script you should open and look at, to better understand what happens.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-configuration-part&quot;&gt;The configuration part&lt;/h3&gt;
@@ -498,9 +669,9 @@ But anyway, there you go, finished is an universal script with which you can fin
 &lt;h2 id=&quot;some-last-note&quot;&gt;Some last Note&lt;/h2&gt;
 &lt;p&gt;You don’t have to use my &lt;code class=&quot;highlighter-rouge&quot;&gt;ImageDataGenerator&lt;/code&gt; class to use this script (it might be badly inefficient). Just find your own way to provide batches of images and labels to the training op and implement it into the script.&lt;/p&gt;
 
-&lt;p&gt;If you have any further questions, feel free to ask. And again, all the code can be found on &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you have any further questions, feel free to ask. And again, all the code can be found on &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow/tree/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d&quot;&gt;github&lt;/a&gt;. But note, that I updated the code, as describe at the top, to work with the new input pipeline of TensorFlow 1.12rc0. If you want to use the &lt;a href=&quot;https://github.com/kratzert/finetune_alexnet_with_tensorflow&quot;&gt;updated version&lt;/a&gt; make sure you updated your TensorFlow version.&lt;/p&gt;
 </description>
-        <pubDate>Fri, 24 Feb 2017 17:11:00 +0100</pubDate>
+        <pubDate>Fri, 24 Feb 2017 10:11:00 +0100</pubDate>
         <link>http://localhost:4000/2017/02/24/finetuning-alexnet-with-tensorflow.html</link>
         <guid isPermaLink="true">http://localhost:4000/2017/02/24/finetuning-alexnet-with-tensorflow.html</guid>
         
