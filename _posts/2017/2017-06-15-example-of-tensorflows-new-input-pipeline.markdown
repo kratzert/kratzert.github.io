@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Example of TensorFlows new Input Pipeline
-date: '2017-06-15 15:56'
+date: '2017-06-15 10:56'
 excerpt: With version 1.2rc0 TensorFlow has gotten a new input pipeline. In this blog
   post I will explain usage and give an example of an entire input pipeline.
 comments: true
