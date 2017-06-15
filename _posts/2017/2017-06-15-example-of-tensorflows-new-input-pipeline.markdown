@@ -150,7 +150,7 @@ To measure the performance using the new input pipeline from TensorFlow instead 
 
 <div class="fig figcenter fighighlight">
   <img src="/images/input_pipeline/comparison.png">
-  <div class="figcaption"><br>Left side shows the time per batch using the pure TensorFlow input pipeline (<a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/master/datagenerator.py">code</a>)). On the right is the result for the old input pipeline (<a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d/datagenerator.py">code</a>) using OpenCV.<br>
+  <div class="figcaption"><br>Left side shows the time per batch using the pure TensorFlow input pipeline (<a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/master/datagenerator.py">code</a>). On the right is the result for the old input pipeline (<a href="https://github.com/kratzert/finetune_alexnet_with_tensorflow/blob/5d751d62eb4d7149f4e3fd465febf8f07d4cea9d/datagenerator.py">code</a>) using OpenCV.<br>
   </div>
 </div>
 
