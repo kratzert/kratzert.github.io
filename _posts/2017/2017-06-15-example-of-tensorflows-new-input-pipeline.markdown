@@ -122,7 +122,7 @@ def input_parser(img_path, label):
     one_hot = tf.one_hot(label, NUM_CLASSES)
 
     # read the img from file
-    img_file = tf.read_file(filename)
+    img_file = tf.read_file(img_path)
     img_decoded = tf.image.decode_image(img_file, channels=3)
 
     return img_decoded, one_hot
