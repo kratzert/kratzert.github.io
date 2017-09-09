@@ -7,7 +7,7 @@ comments: true
 ---
 
 ## Update 15.05.2017
-I updated the code of the repository to work with TensorFlows [new input pipeline](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data). Read my [other blogpost](https://kratzert.github.io/2017/06/15/example_of_tensorflows_new_input_pipeline.html) for an explanation of this new feature coming with TensorFlows version >= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.
+I updated the code of the repository to work with TensorFlows [new input pipeline](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data). Read my [other blogpost](https://kratzert.github.io/2017/06/15/example-of-tensorflows-new-input-pipeline.html) for an explanation of this new feature coming with TensorFlows version >= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.
 
 <br>
 <br>
