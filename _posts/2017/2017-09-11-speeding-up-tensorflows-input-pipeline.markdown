@@ -8,7 +8,7 @@ excerpt: >-
 comments: true
 ---
 
-When I wrote the last article about the [new Dataset api](https://kratzert.github.io/2017/06/15/example-of-tensorflows-new-input-pipeline.html) TensorFlow got with the release of version 1.2, it was still only a release candidate and the documentation was pretty bad. There was a good discussion about the new input pipeline on GitHub and in the [last comment](https://github.com/tensorflow/tensorflow/issues/7951#issuecomment-326098305) Derek Murry pointed me to two additional arguments you can provide to the Dataset API to make the whole input pipeline work in parallel, instead of sequentially.
+When I wrote the last article about the [new Dataset API](https://kratzert.github.io/2017/06/15/example-of-tensorflows-new-input-pipeline.html) TensorFlow got with the release of version 1.2, it was still only a release candidate and the documentation was pretty bad. There was a good discussion about the new input pipeline on GitHub and in the [last comment](https://github.com/tensorflow/tensorflow/issues/7951#issuecomment-326098305) Derek Murry pointed me to two additional arguments you can provide to the Dataset API to make the whole input pipeline work in parallel, instead of sequentially.
 
 <div class="fig figcenter fighighlight">
   <img src="/images/speedup_input_pipeline/map_doc.png">
