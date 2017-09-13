@@ -117,18 +117,28 @@ I run these models with random numbers as input, just to compare the computation
 # Measure the execution time of the Python implementation
 py_time = %timeit -r 5 -n 10 -o abc_model_py(0.2, 0.6, 0.1, rain)
 
->> 7.1 s ± 79.5 ms per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 6.75 s ± 11.6 ms per loop (mean ± std. dev. of 5 runs, 10 loops each)
 
 # Measure the execution time of the Numba implementation
 numba_time = %timeit -r 5 -n 10 -o abc_model_numba(0.2, 0.6, 0.1, rain)
 
->> 33.5 ms ± 356 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 30.6 ms ± 498 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
 
 # Measure the execution time of the Fortran implementation
 fortran_time = %timeit -r 5 -n 10 -o abc_model_fortran(0.2, 0.6, 0.1, rain)
 
->> 21.7 ms ± 248 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 31.9 ms ± 757 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
+
+# Compare the pure Python vs Numba optimized time
+py_time.best / numba_time.best
+
+>> 222.1521754580626
+
+# Compare the time of the fastes numba and fortran run
+numba_time.best / fortran_time.best
+
+>> 0.9627960721576471
 ```
-So by adding just one decorator we got are 211 times faster and are roughly as fast as Fortran? Well not bad, huh?
+By adding just one decorator we are 222 times faster as the pure Python code and are even minimally faster than Fortran? Well not bad, huh?
 
 I'll end my introduction here and hope some of you are now motivated to have a look into the Numba library. My idea is to write a small series of Numba articles/tutorials in the future with more technical information, while this article should have served only as a appetizer.
