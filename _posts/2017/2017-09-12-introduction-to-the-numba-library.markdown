@@ -129,6 +129,6 @@ fortran_time = %timeit -r 5 -n 10 -o abc_model_fortran(0.2, 0.6, 0.1, rain)
 
 >> 21.7 ms ± 248 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
 ```
-So by adding just one decorator we got a speed up of 211% and are roughly as fast as Fortran? Well not bad, huh?
+So by adding just one decorator we got are 211 times faster and are roughly as fast as Fortran? Well not bad, huh?
 
 I'll end my introduction here and hope some of you are now motivated to have a look into the Numba library. My idea is to write a small series of Numba articles/tutorials in the future with more technical information, while this article should have served only as a appetizer.
