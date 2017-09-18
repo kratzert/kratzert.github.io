@@ -117,28 +117,30 @@ I run these models with random numbers as input, just to compare the computation
 # Measure the execution time of the Python implementation
 py_time = %timeit -r 5 -n 10 -o abc_model_py(0.2, 0.6, 0.1, rain)
 
->> 6.75 s ± 11.6 ms per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 6.94 s ± 258 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 
 # Measure the execution time of the Numba implementation
 numba_time = %timeit -r 5 -n 10 -o abc_model_numba(0.2, 0.6, 0.1, rain)
 
->> 30.6 ms ± 498 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 32.6 ms ± 52.7 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 # Measure the execution time of the Fortran implementation
 fortran_time = %timeit -r 5 -n 10 -o abc_model_fortran(0.2, 0.6, 0.1, rain)
 
->> 31.9 ms ± 757 µs per loop (mean ± std. dev. of 5 runs, 10 loops each)
+>> 23.4 ms ± 934 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 # Compare the pure Python vs Numba optimized time
 py_time.best / numba_time.best
 
->> 222.1521754580626
+>> 205.15122150338178
 
 # Compare the time of the fastes numba and fortran run
 numba_time.best / fortran_time.best
 
->> 0.9627960721576471
+>> 1.451113966128858
 ```
-By adding just one decorator we are 222 times faster as the pure Python code and are even minimally faster than Fortran? Well not bad, huh?
+By adding just one decorator we are 205 times faster as the pure Python code and roughly as fast as Fortran? Well not bad, huh?
+
+(Note that in a previous version the Numba optimized function was minimally faster than the Fortran implementation. By switching from the f2py wrapper to Cython the Fortran time was reduced, so Fortran is now a bit faster. See [this pull request](https://github.com/kratzert/RRMPG/pull/3) for further details.
 
 I'll end my introduction here and hope some of you are now motivated to have a look into the Numba library. My idea is to write a small series of Numba articles/tutorials in the future with more technical information, while this article should have served only as a appetizer.
