@@ -349,3 +349,5 @@ There is a list of some more arguments you could pass to the `@jit` decorator ([
 For now I'll stop here and hope you have now a better understanding how you can use the `@jit` decorator. More specific I hope you have understood, that you can only use specific functions and features in functions you want to optimize and how you can detect if your function was optimized or not. Also you should have an idea now what signatures are and how you can force specific data types with them. The last thing I told you for now was, that you can only call other functions of your own if you also compiled them using the `@jit` decorator.
 
 In the next part, we will have a look at how we can use custom/different data types as inputs with Numba.
+
+You can find this entire article as Jupyter Notebook [here](https://github.com/kratzert/numba_tutorials/blob/master/Part_1_the_jit_decorator.ipynb).

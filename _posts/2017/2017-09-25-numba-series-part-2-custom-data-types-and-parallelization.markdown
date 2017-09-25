@@ -238,3 +238,5 @@ if (np.array_equal(outflow_py, outflow_jit) and
 
 
 Okay so that's it for now. I hope this post helps you to understand how custom Numpy data types can be used in combination with the Numba library and how you can make Numba parallelize your code to gain additional speedups
+
+You can find this entire article as Jupyter Notebook [here](https://github.com/kratzert/numba_tutorials/blob/master/Part_2_custom_dtypes_and_parallelization.ipynb).
