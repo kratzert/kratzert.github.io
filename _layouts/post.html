@@ -1,31 +1,75 @@
 ---
-layout: default
+layout: base
 ---
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
-  </header>
+{% include header.html type="post" %}
 
-  <div class="post-content" itemprop="articleBody">
-    {{ content }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      {% if page.gh-repo %}
+        {% assign gh_split =  page.gh-repo | split:'/'  %}
+        {% assign gh_user =  gh_split[0]  %}
+        {% assign gh_repo =  gh_split[1]  %}
+      
+        <div id="header-gh-btns">
+          {% if page.gh-badge.size > 0 %}
+            {% for badge in page.gh-badge %}
+              {% case badge %}
+                {% when 'star'%}
+                  <iframe src="https://ghbtns.com/github-btn.html?user={{ gh_user }}&repo={{ gh_repo }}&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
+                {% when 'watch'%}
+                  <iframe src="https://ghbtns.com/github-btn.html?user={{ gh_user }}&repo={{ gh_repo }}&type=watch&v=2&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
+                {% when 'fork'%}
+                  <iframe src="https://ghbtns.com/github-btn.html?user={{ gh_user }}&repo={{ gh_repo }}&type=fork&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>  
+                {% when 'follow'%}
+                  <iframe src="https://ghbtns.com/github-btn.html?user={{ gh_user }}&type=follow&count=true" frameborder="0" scrolling="0" width="220px" height="20px"></iframe>
+              {% endcase %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endif %}
+      
+      <article role="main" class="blog-post">
+        {{ content }}
+      </article>
+
+      {% if page.tags.size > 0 %}
+        <div class="blog-tags">
+          Tags:
+          {% if site.link-tags %}
+          {% for tag in page.tags %}
+            <a href="/tag/{{ tag }}">{{ tag }}</a>
+          {% endfor %}
+          {% else %}
+            {{ page.tags | join: ", " }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if page.social-share %}
+        {% include social-share.html %}
+      {% endif %}
+
+      <ul class="pager blog-pager">
+        {% if page.previous.url %}
+        <li class="previous">
+          <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">&larr; Previous Post</a>
+        </li>
+        {% endif %}
+        {% if page.next.url %}
+        <li class="next">
+          <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">Next Post &rarr;</a>
+        </li>
+        {% endif %}
+      </ul>
+
+      {% if page.comments %}
+        <div class="disqus-comments">
+          {% include disqus.html %}
+        </div>
+      {% endif %}
+    </div>
   </div>
-
-  <!-- disqus comments -->
-{% if page.comments %}
-<div id="disqus_thread"></div>
- <script type="text/javascript">
-     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-     var disqus_shortname = 'kratzertblog'; // required: replace example with your forum shortname
-     /* * * DON'T EDIT BELOW THIS LINE * * */
-     (function() {
-         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-     })();
- </script>
- <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
- <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
- {% endif %}
-</article>
+</div>
