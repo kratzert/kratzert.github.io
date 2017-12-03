@@ -1,212 +1,22 @@
-# --- General options --- #
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
 
-# url is the full website URL
-# baseurl is the website's URL without the hostname
+# Site settings
+title: Flaire of Machine Learning
+email: f.kratzert@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  Keeping progress recorded...
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "kratzert.github.io" # the base hostname & protocol for your site
+twitter_username: fkratzert
+github_username:  kratzert
+google_analytics: 'UA-96660715-1'
 
-# If you are building a simple GitHub user page (http://username.github.io) then use these settings:
-url: "https://kratzert.github.io"
-baseurl: ""
-
-# If you are building a GitHub project page then use these settings:
-#url: "http://username.github.io/projectname"
-#baseurl: "/projectname"
-
-# Of course don't forget to change the username and projectname to YOUR username and project
-
-# Name of website
-title: Flair of Machine Learning
-
-# Short description of your site
-description: A virtual proof that name is awesome!
-
-# --- Navigation bar options --- #
-
-# List of links in the navigation bar
-navbar-links:
-  About Me: "aboutme"
-  Open Learning: "openlearning"
-  Projects: "projects"
-#  Resources:
-#    - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
-#    - Learn markdown: "http://www.markdowntutorial.com/"
-#    - GitHub Pages: "https://pages.github.com/"
-#  Author's home: "http://deanattali.com"
-
-# Image to show in the navigation bar - image must be a square (width = height)
-# Remove this parameter if you don't want an image in the navbar
-avatar: "/img/avatar.jpg"
-
-# If you want to have an image logo in the top-left corner instead of the title text,
-# then specify the following parameter
-# title-img: /path/to/image
-
-# --- Background colour/image options --- #
-
-# By default, the navigation bar and footer have a light gray background, and the main page
-# has a white background. You can specify a different background colour or a background image
-# for the navigation bar, the main page, and the footer.
-# navbar-col: "orange"
-# navbar-img: "/img/bgimage.png"
-# footer-col: "blue"
-# footer-img: "/img/bgimage.png"
-# page-col: "#FF0000"
-# page-img: "/img/bgimage.png"
-
-# --- Footer options --- #
-
-# Change all these values or delete the ones you don't want.
-# Important: you must keep the "name" parameter, everything else you can remove
-author:
-  name: Frederik Kratzert
-  email: "f.kratzert@gmail.com"
-  github: kratzert
-  twitter: fkratzert
-  linkedin: frederik-kratzert-226a33148
-  xing: yourname
-  stackoverflow: yourlink
-
-
-# Select which links to show in the footer
-footer-links-active:
-  rss: true
-  facebook: false
-  email: true
-  twitter: true
-  github: true
-  linkedin: true
-  xing: false
-  stackoverflow: false
-
-
-# Select which share links to show in posts
-share-links-active:
-  twitter: true
-  facebook: true
-  google: false
-  linkedin: true
-
-# How to display the link to the website in the footer
-# Remove this if you don't want a link in the footer
-url-pretty: "kratzert.github.io"  # eg. "deanattali.com/beautiful-jekyll"
-
-# --- Misc --- #
-# Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
-disqus: "kratzertblog"
-
-# Fill in your Google Analytics ID to track your website using GA
-google_analytics: "UA-96660715-1"
-
-# Google Tag Manager ID
-#gtm: ""
-
-# Facebook App ID
-# fb_app_id: ""
-
-# Excerpt Word Length
-# Truncates the excerpt to the specified number of words on the index page
-excerpt_length: 50
-
-# Character used to separate site title and description in HTML document title
-# and RSS feed title
-title-separator: "-"
-
-# --- Don't need to touch anything below here (but you can if you want) --- #
-
-# Output options (more information on Jekyll's site)
-timezone: "Europe/Berlin"
+# Build settings
 markdown: kramdown
-highlighter: rouge
-permalink: /:year/:month/:day/:title/
-paginate: 10
-
 kramdown:
   input: GFM
-
-# Default YAML values (more information on Jekyll's site)
-defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
-      comments: true  # add comments to all blog posts
-      social-share: true # add social media sharing buttons to all blog posts
-  -
-    scope:
-      path: "" # all files
-    values:
-      layout: "page"
-      show-avatar: true
-
-# Use tags pages (not recommended if you are deploying via GitHub pages, only set to true if deploying locally with ruby)
-link-tags: false
-
-# Exclude these files from production site
-exclude:
-  - CHANGELOG.md
-  - CNAME
-  - Dockerfile
-  - Gemfile
-  - Gemfile.lock
-  - LICENSE
-  - README.md
-  - Vagrantfile
-
-# prose.io config
-prose:
-  rooturl: '_posts'
-  media: 'img'
-  ignore:
-    - 404.html
-    - LICENSE
-    - feed.xml
-    - _config.yml
-    - /_layouts
-    - /_includes
-    - /css
-    - /img
-    - /js
-  metadata:
-    _posts:
-      - name: "layout"
-        field:
-          element: "hidden"
-          value: "post"
-      - name: "title"
-        field:
-          element: "text"
-          label: "Post title"
-          placeholder: "Title"
-          alterable: true
-      - name: "subtitle"
-        field:
-          element: "textarea"
-          label: "Subtitle"
-          placeholder: "A description of your post."
-          alterable: true
-      - name: "date"
-        field:
-          element: "text"
-          label: "Date"
-          help: "Enter date of post."
-          placeholder: "yyyy-mm-dd"
-          alterable: true
-      - name: "image"
-        field:
-          element: "text"
-          label: "Image"
-          help: "Add a thumbnail image to your post."
-          placeholder: "Thumbnail"
-          alterable: true
-      - name: "published"
-        field:
-          element: "checkbox"
-          label: "Publish"
-          help: "Check to publish post, uncheck to hide."
-
-plugins:
-  - jekyll-paginate
-
-# Beautiful Jekyll / Dean Attali
-# 2fc73a3a967e97599c9763d05e564189

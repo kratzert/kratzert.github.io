@@ -6,11 +6,11 @@ excerpt: This blog post will guide you on how to finetune AlexNet with pure Tens
 comments: true
 ---
 
-<div class="alert alert-info">
-<strong>Update 15.05.2017</strong>
-    I updated the code of the repository to work with TensorFlows <a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data">new input pipeline</a>. Read my <a href="https://kratzert.github.io/2017/06/15/example-of-tensorflows-new-input-pipeline.html">other blogpost</a> for an explanation of this new feature coming with TensorFlows version >= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.
-</div>
+## Update 15.05.2017
+I updated the code of the repository to work with TensorFlows [new input pipeline](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data). Read my [other blogpost](https://kratzert.github.io/2017/06/15/example-of-tensorflows-new-input-pipeline.html) for an explanation of this new feature coming with TensorFlows version >= 1.12rc0. The links below in this article are still pointing to the code explained here in this article.
 
+<br>
+<br>
 After over one year I finally found time and leisure to write my next article. This time about finetuning [AlexNet](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf) in pure [TensorFlow 1.0](https://www.tensorflow.org/install/migration). "AlexNet?" you might say, "So 2012'ish!" you might say. Well here are some reasons why I thought it's worth doing anyway:
 
 - Albeit there exist many How-To's, most of the newer once are covering finetuning VGG or Inception Models and not AlexNet. Although the idea behind finetuning is the same, the major difference is, that Tensorflow (as well as Keras) already ship with VGG or Inception classes and include the weights (pretrained on ImageNet). For the AlexNet model, we have to do a bit more on our own.
