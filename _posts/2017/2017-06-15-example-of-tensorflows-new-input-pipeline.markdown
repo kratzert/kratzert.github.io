@@ -6,11 +6,11 @@ excerpt: With version 1.2rc0 TensorFlow has gotten a new input pipeline. In this
   post I will explain usage and give an example of an entire input pipeline.
 comments: true
 ---
-## Update 11.09.2017
-I wrote a new article about a small code change that let's the whole input pipeline run in parallel. So have a look  [here](https://kratzert.github.io/2017/09/11/speeding-up-tensorflows-input-pipeline.html). Anyway in this article I explain the basic concept of the new Dataset API, so it's still worth reading.
+<div class="alert alert-info">
+<strong>Update 11.09.2017</strong>
+    I wrote a new article about a small code change that let's the whole input pipeline run in parallel. So have a look <a href="https://kratzert.github.io/2017/09/11/speeding-up-tensorflows-input-pipeline.html">here</a>. Anyway in this article I explain the basic concept of the new Dataset API, so it's still worth reading.
+</div>
 
-<br>
-<br>
 During the time I wrote my last article about [finetuning AlexNet with TensorFlow](https://kratzert.github.io/2017/02/24/finetuning-alexnet-with-tensorflow.html) I read about the [best practices for optimizing performance in TensorFlow](https://www.tensorflow.org/performance/performance_guide). There are several things I made different to these practices but I think the one that had the biggest effect on the performance was everything around the input pipeline. With the new Version of TensorFlow the [`Dataset API`](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/data) was introduced and provides us with a good and relatively easy way to write our own input pipeline using nothing more than TensorFlow. While you can potentially use this Datasets for any kind of input data, I will use images for the use case of this article. By the end of this article you will hopefully be able to use the new `Dataset` API for you own project and decrease the computation time needed to train you model.
 
 ## What we had so far?
