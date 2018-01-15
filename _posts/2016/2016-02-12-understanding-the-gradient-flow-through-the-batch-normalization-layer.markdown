@@ -110,7 +110,7 @@ In the comments of aboves code snippet I already numbered the computational step
   <div class="figcaption"><br>Backwardpass through the last summation gate of the BatchNorm-Layer. Enclosed in brackets I put the dimensions of Input/Output<br>
   </div>
 </div>
-Recall that the derivation of a function `f = x + y` with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. And because the summation of `beta` during the forward pass is a row-wise summation, during the backward pass we need to sum up the gradient over all of its columns (take a look at the dimensions). So after the first step of backpropagation we already got the gradient for one learnable parameter: `beta`
+Recall that the derivation of a function `f = x + y` with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. For our final loss evaluation, we sum the gradient of all samples in the batch. Through this operation, we also get a vector of gradients with the correct shape for `beta`. So after the first step of backpropagation we already got the gradient for one learnable parameter: `beta`
 
 ### Step 8
 
@@ -119,7 +119,7 @@ Recall that the derivation of a function `f = x + y` with respect to any of thes
   <div class="figcaption"><br>Next follows the backward pass through the multiplication gate of the normalized input and the vector of gamma.<br>
   </div>
 </div>
-For any function `f = x * y` the derivation with respect to one of the inputs is simply just the other input variable. This also means, that for this step of the backward pass we need the variables used in the forward pass of this gate (luckily stored in the `cache` of aboves function). So again we get the gradients of the two inputs of these gates by applying chain rule (  = multiplying the local gradient with the gradient from above). For `gamma`, as for `beta` in step 9, we need to sum up the gradients over dimension `N`, because the multiplication was again row-wise. So we now have the gradient for the second learnable parameter of the BatchNorm-Layer `gamma` and "only" need to backprop the gradient to the input `x`, so that we then can backpropagate the gradient to any layer further downwards.
+For any function `f = x * y` the derivation with respect to one of the inputs is simply just the other input variable. This also means, that for this step of the backward pass we need the variables used in the forward pass of this gate (luckily stored in the `cache` of aboves function). So again we get the gradients of the two inputs of these gates by applying chain rule (  = multiplying the local gradient with the gradient from above). For `gamma`, as for `beta` in step 9, we need to sum up the gradients over dimension `N`. So we now have the gradient for the second learnable parameter of the BatchNorm-Layer `gamma` and "only" need to backprop the gradient to the input `x`, so that we then can backpropagate the gradient to any layer further downwards.
 
 ### Step 7
 
