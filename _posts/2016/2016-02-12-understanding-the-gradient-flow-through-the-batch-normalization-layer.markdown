@@ -97,7 +97,7 @@ To fully understand the channeling of the gradient backwards through the BatchNo
   </div>
 </div>
 
-So again, we only have to multiply the local gradient of the function with the gradient of above to channel the gradient backwards. Some derivations of some basic functions are listed in the [course material](http://cs231n.github.io/optimization-2/#sigmoid). If you understand that, and with some more basic knowledge in calculus, what will follow is a piece of cake!
+So again, we only have to multiply the local gradient of the function with the gradient of above to channel the gradient backwards. Some derivatives of some basic functions are listed in the [course material](http://cs231n.github.io/optimization-2/#sigmoid). If you understand that, and with some more basic knowledge in calculus, what will follow is a piece of cake!
 
 ## Finally: The Backpass of the Batch Normalization
 
@@ -110,7 +110,7 @@ In the comments of aboves code snippet I already numbered the computational step
   <div class="figcaption"><br>Backwardpass through the last summation gate of the BatchNorm-Layer. Enclosed in brackets I put the dimensions of Input/Output<br>
   </div>
 </div>
-Recall that the derivation of a function `f = x + y` with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. For our final loss evaluation, we sum the gradient of all samples in the batch. Through this operation, we also get a vector of gradients with the correct shape for `beta`. So after the first step of backpropagation we already got the gradient for one learnable parameter: `beta`
+Recall that the derivative of a function `f = x + y` with respect to any of these two variables is `1`. This means to channel a gradient through a summation gate, we only need to multiply by `1`. For our final loss evaluation, we sum the gradient of all samples in the batch. Through this operation, we also get a vector of gradients with the correct shape for `beta`. So after the first step of backpropagation we already got the gradient for one learnable parameter: `beta`
 
 ### Step 8
 
@@ -119,7 +119,7 @@ Recall that the derivation of a function `f = x + y` with respect to any of thes
   <div class="figcaption"><br>Next follows the backward pass through the multiplication gate of the normalized input and the vector of gamma.<br>
   </div>
 </div>
-For any function `f = x * y` the derivation with respect to one of the inputs is simply just the other input variable. This also means, that for this step of the backward pass we need the variables used in the forward pass of this gate (luckily stored in the `cache` of aboves function). So again we get the gradients of the two inputs of these gates by applying chain rule (  = multiplying the local gradient with the gradient from above). For `gamma`, as for `beta` in step 9, we need to sum up the gradients over dimension `N`. So we now have the gradient for the second learnable parameter of the BatchNorm-Layer `gamma` and "only" need to backprop the gradient to the input `x`, so that we then can backpropagate the gradient to any layer further downwards.
+For any function `f = x * y` the derivative with respect to one of the inputs is simply just the other input variable. This also means, that for this step of the backward pass we need the variables used in the forward pass of this gate (luckily stored in the `cache` of aboves function). So again we get the gradients of the two inputs of these gates by applying chain rule (  = multiplying the local gradient with the gradient from above). For `gamma`, as for `beta` in step 9, we need to sum up the gradients over dimension `N`. So we now have the gradient for the second learnable parameter of the BatchNorm-Layer `gamma` and "only" need to backprop the gradient to the input `x`, so that we then can backpropagate the gradient to any layer further downwards.
 
 ### Step 7
 
@@ -146,7 +146,7 @@ The local gradient is visualized in the image and should not be hard to derive b
   <div class="figcaption"><br>Again "one input-one output". This node calculates during the forward pass the denominator of the normalization.<br>
   </div>
 </div>
-The derivation of the local gradient is little magic and should need no explanation. `var` and `eps` are also passed in the `cache`. No more words to lose!
+The calculation of the derivative of the local gradient is little magic and should need no explanation. `var` and `eps` are also passed in the `cache`. No more words to lose!
 
 ### Step 4
 
@@ -155,7 +155,7 @@ The derivation of the local gradient is little magic and should need no explanat
   <div class="figcaption"><br>Also a "one input-one output" node. During the forward pass the output of this node is the variance of each feature `d for d in [1...D]`.<br>
   </div>
 </div>
-The derivation of this steps local gradient might look unclear at the very first glance. But it's not that hard at the end. Let's recall that a normal summation gate (see step 9) during the backward pass only transfers the gradient unchanged and evenly to the inputs. With that in mind, it should not be that hard to conclude, that a column-wise summation during the forward pass, during the backward pass means that we evenly distribute the gradient over all rows for each column. And not much more is done here. We create a matrix of ones with the same shape as the input `sq` of the forward pass, divide it element-wise by the number of rows (thats the local gradient) and multiply it by the gradient from above.
+The calculation of the derivative of this steps local gradient might look unclear at the very first glance. But it's not that hard at the end. Let's recall that a normal summation gate (see step 9) during the backward pass only transfers the gradient unchanged and evenly to the inputs. With that in mind, it should not be that hard to conclude, that a column-wise summation during the forward pass, during the backward pass means that we evenly distribute the gradient over all rows for each column. And not much more is done here. We create a matrix of ones with the same shape as the input `sq` of the forward pass, divide it element-wise by the number of rows (thats the local gradient) and multiply it by the gradient from above.
 
 ### Step 3
 
@@ -164,7 +164,7 @@ The derivation of this steps local gradient might look unclear at the very first
   <div class="figcaption"><br>This node outputs the square of its input, which during the forward pass was a matrix containing the input `x` subtracted by the per-feature `mean`.<br>
   </div>
 </div>
-I think for all who followed until here, there is not much to explain for the derivation of the local gradient.
+I think for all who followed until here, there is not much to explain regarding the derivative of the local gradient.
 
 ### Step 2
 
