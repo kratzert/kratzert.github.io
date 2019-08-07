@@ -22,15 +22,15 @@ I obtained my Bachelor of Engineering degree in <strong>Electronics and Communic
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
-  After B.E I did PG Diploma in <strong>Electronic Product Design (DEPD 2013-2014) </strong> from CDAC Hyderabad.
+  PG Diploma in <strong>Electronic Product Design (DEPD 2013-2014) </strong> from CDAC Hyderabad.
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
-  After that I obtained <strong>Master of Technology in Electronics and Communication Engineering (M.Tech EC 2014-2016) </strong> from Pondicherry Central University in Pondicherry.
+  <strong>Master of Technology in Electronics and Communication Engineering (M.Tech EC 2014-2016) </strong> from Pondicherry Central University in Pondicherry.
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
-  I also did <strong>PG Diploma in Computer Applications (PGDCA 2014-2015) </strong>from Pondicherry Central University in Pondicherry.
+  PG Diploma in Computer Applications (PGDCA 2014-2015) </strong>from Pondicherry Central University in Pondicherry.
   
 <p class="about-text">  
 <span class="fa fa-graduation-cap about-icon"></span>
