@@ -18,23 +18,19 @@ I am a programmer, software engineer and developer in Machine Learning / Deep Le
 
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
-I obtained my Bachelor of Engineering degree in <strong>Electronics and Communication & Engineering (ECE 2009-2013) </strong>from ANITS (Andhra University) in Vizag, India.
-  </p>
+I obtained my Bachelor of Engineering degree in <strong>Electronics and Communication & Engineering (ECE 2009-2013) <strong/n>from ANITS (Andhra University) in Vizag, India.
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
-  After B.E I did PG Diploma in <strong>Electronic Product Design (DEPD 2013-2014) <strong>from CDAC Hyderabad.
-  </p>
+  After B.E I did PG Diploma in <strong>Electronic Product Design (DEPD 2013-2014) <strong/n>from CDAC Hyderabad.
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
   After that I obtained <strong>Master of Technology in Electronics and Communication Engineering (M.Tech EC 2014-2016) <strong>from Pondicherry Central University in Pondicherry.
-  </p>
   
 <p class="about-text">
 <span class="fa fa-graduation-cap about-icon"></span>
   I also did <strong>PG Diploma in Computer Applications (PGDCA 2014-2015) <strong>from Pondicherry Central University in Pondicherry.
-  </p>
   
 <p class="about-text">  
 <span class="fa fa-graduation-cap about-icon"></span>
