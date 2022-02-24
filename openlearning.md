@@ -2,7 +2,7 @@
 layout: "post"
 title: "Dev1ls Docs-Wiki-Hacks"
 date: "2022-02-23 21:21"
-excerpt: "An overview of freely available learning content on various topics (though mainly machine learning)."
+excerpt: "Stuffs/wikis (lo que no esta aqui.. esta en google! ahahahha...)."
 ---
 
 aqui voy a ir colocando documentos, how to, wiki :)
