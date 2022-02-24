@@ -6,8 +6,9 @@ excerpt: Mutt "All mail clients suck. This one just sucks less." -me, circa 1995
 comments: true
 ---
 
-Mutt es un cliente de correo electrónico libre basado en texto, para sistemas similares a unix.
+![Dev1ls Mutt](https://i.imgur.com/PkFxDWF.png "Dev1ls Mutt")
 
+Mutt es un cliente de correo electrónico libre basado en texto, para sistemas similares a unix.
 
 ## Uno de mis clientes de correo Favorito!!
 
@@ -153,4 +154,3 @@ What’s So Special About Mutt?
 
 Mutt is an open-source package that serves the purpose, is relatively small, and gets the job done. Despite its quick processing and resourceful error handling, it falls short when it comes to displaying images within emails.
 
-![Dev1ls Mutt](https://i.imgur.com/PkFxDWF.png "Dev1ls Mutt")
