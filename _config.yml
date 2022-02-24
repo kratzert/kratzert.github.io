@@ -14,27 +14,27 @@ baseurl: ""
 # Of course don't forget to change the username and projectname to YOUR username and project
 
 # Name of website
-title: Dev1lsNet > DNet
+title: Dev1ls > Blog
 
 # Short description of your site
-description: A virtual proof that name is awesome!
+description: Personal Blog / NinjaCLI
 
 # --- Navigation bar options --- #
 
 # List of links in the navigation bar
 navbar-links:
-  About Me: "aboutme"
-  Open Learning: "openlearning"
-  Projects: "projects"
+  About Me: "Intro"
+  Open Learning: "Dock/Wiki"
+  Projects: "projectos"
 #  Resources:
-#    - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
+#    - Beautiful Jekyll: "http://deahttps://i.imgur.com/H0xG6Ug.pngnattali.com/beautiful-jekyll/"
 #    - Learn markdown: "http://www.markdowntutorial.com/"
 #    - GitHub Pages: "https://pages.github.com/"
 #  Author's home: "http://deanattali.com"
 
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
-avatar: "/img/avatar.jpg"
+avatar: "https://i.imgur.com/H0xG6Ug.png"
 
 # If you want to have an image logo in the top-left corner instead of the title text,
 # then specify the following parameter
@@ -57,13 +57,12 @@ avatar: "/img/avatar.jpg"
 # Change all these values or delete the ones you don't want.
 # Important: you must keep the "name" parameter, everything else you can remove
 author:
-  name: Frederik Kratzert
-  email: "f.kratzert@gmail.com"
-  github: kratzert
-  twitter: fkratzert
-  linkedin: frederik-kratzert-226a33148
-  xing: yourname
-  stackoverflow: yourlink
+  name: Dev1ls
+  email: "Dev1lsconf@gmail.com"
+  github: Dev1lsconf
+  twitter: Dev1lsconf
+  linkedin: dev1lsconf
+  IRC: irc.dev1ls.online
 
 
 # Select which links to show in the footer
@@ -73,8 +72,8 @@ footer-links-active:
   email: true
   twitter: true
   github: true
-  linkedin: true
-  xing: false
+  linkedin: false
+  IRC: true
   stackoverflow: false
 
 
@@ -83,7 +82,7 @@ share-links-active:
   twitter: true
   facebook: true
   google: false
-  linkedin: true
+  linkedin: false
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
@@ -94,7 +93,7 @@ url-pretty: "dev1lsconf.github.io"  # eg. "deanattali.com/beautiful-jekyll"
 disqus: "dev1lsconf"
 
 # Fill in your Google Analytics ID to track your website using GA
-google_analytics: "UA-96660715-1"
+#google_analytics: "UA-96660715-1"
 
 # Google Tag Manager ID
 #gtm: ""
