@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Mi Primer Post
-date: '2022-02-23 22:11'
+date: '2022-02-23 10:11'
 excerpt: Este Blog abre oficialmente!!! 
 comments: true
 ---
