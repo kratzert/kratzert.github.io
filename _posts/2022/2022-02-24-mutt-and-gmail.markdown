@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Configurando Mutt y Gmail 
-date: '2022-02-24 12:11'
+date: '2022-02-23 12:11'
 excerpt: Mutt "All mail clients suck. This one just sucks less." -me, circa 1995 
 comments: true
 ---
