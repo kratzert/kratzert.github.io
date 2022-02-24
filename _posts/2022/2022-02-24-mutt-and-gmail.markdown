@@ -17,27 +17,29 @@ How to Install Mutt on Linux
 Since Mutt isn't a standard Linux package, you won't find it preinstalled on your system. You'll have to manually install the package using a package manager.
 
 On Ubuntu and Debian:
-
-sudo apt install mutt
-
+    
+    sudo apt install mutt
+    
 How to Configure Mutt on Linux
 
 As the first configuration step, you have to create a few directories where the system will store mails, headers, and certificates post-installation.
 
 Issue the following commands one by one:
-
-mkdir -p ~/.mutt/cache/headers
-mkdir ~/.mutt/cache/bodies
-touch ~/.mutt/certificates
-
+    
+    mkdir -p ~/.mutt/cache/headers
+    
+    mkdir ~/.mutt/cache/bodies
+    
+    touch ~/.mutt/certificates
+    
 Create the Mutt configuration file using the touch command:
-
-touch ~/.mutt/muttrc
-
+    
+    touch ~/.mutt/muttrc
+    
 Open the muttrc file using your favorite text editor:
-
-sudo nano ~/.mutt/muttrc
-
+    
+    sudo nano ~/.mutt/muttrc
+    
 Once the editor opens up, it's time to start filling in your mailbox's IMAP and SMTP details to populate the mailbox's settings for incoming and outgoing mails.
 
 Here are the settings:
@@ -60,7 +62,7 @@ Here are the settings:
 
 This example demonstrates how to set up a Gmail account using Mutt. Make sure to replace username, First, and Last in the above snippet with your email address username, first name, and last name respectively.
 Deciphering the Commands for Email Settings
-    From: Sender's email ID
+From: Sender's email ID
     Realname: This will be your name, which would appear on the email.
     IMAP_user: This is your email address.
     IMAP_pass: Your email password, in case you are sure no one else will be accessing your mailbox.
@@ -90,46 +92,46 @@ To send new emails using Mutt, type m in the terminal. Mutt will ask for the rec
 1. Send an Email With Subject and Body Message
 
 To add the subject string in your email, use the -s flag:
-
-mutt -s "Testing Email from mutt" winibhalla234@gmail.com
-
+    
+    mutt -s "Testing Email from mutt" winibhalla234@gmail.com
+    
 2. Pipe Mutt With echo
 
 You can implement the echo command with Mutt to pass the message body of the email:
-
-echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla1234@gmail.com
-
+    
+    echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla1234@gmail.com
+    
 3. Send an Email With an Attachment
-
+    
 To add a file as an attachment, specify the path of the file at the end of the command:
-
-echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla645@gmail.com test.txt
+    
+    echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla645@gmail.com test.txt
 
 If you want to attach multiple files, pass the file names separated with the Space character.
 
-echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla543@gmail.com -a test.tar.gz –a test2.tar.gz
+    echo "Body Message" | mutt -s "Testing Email from mutt" winibhalla543@gmail.com -a test.tar.gz –a test2.tar.gz
 
 4. Send Email to Multiple Recipients
 
 Similarly, you can also add multiple email addresses to send the email to:
 
-mutt -s "Testing Email from mutt" demo1@muo.com, demo2@muo.com, demo3@muo.com
-
+    mutt -s "Testing Email from mutt" demo1@muo.com, demo2@muo.com, demo3@muo.com
+    
 5. Add Recipients in CC and BCC Mode
 
 You can use the -c and -b flag to specify the email addresses for carbon copy and blind carbon copy.
-
-mutt -s "Subject of mail" -c ; -b ; mail address of the recipient
+    
+    mutt -s "Subject of mail" -c ; -b ; mail address of the recipient
 
 In the example below, Mutt will use winibhalla533@gmail.com as the To address, while it will carbon copy and blind carbon copy the email to winibhalla123@gmail.com and winibhalla234@gmail.com respectively.
 
-mutt -s “Test Email” -c winibhalla123@gmail.com  -b winibhalla234@gmail.com winibhalla533@gmail.com
+    mutt -s “Test Email” -c winibhalla123@gmail.com  -b winibhalla234@gmail.com winibhalla533@gmail.com
 
 6. Get Command-Line Help
 
 In case you feel stuck, you can seek out Mutt's help using the -h flag.
 
-mutt -h
+    mutt -h
 
 Reviewing Mutt's Email Interface
 
@@ -150,5 +152,3 @@ You can use the following commands with Mutt:
 What’s So Special About Mutt?
 
 Mutt is an open-source package that serves the purpose, is relatively small, and gets the job done. Despite its quick processing and resourceful error handling, it falls short when it comes to displaying images within emails.
-
-Since it's made in a text format to return fast results, some people might feel Mutt does not do the job well for mails with im
