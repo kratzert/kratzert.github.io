@@ -25,23 +25,24 @@ How to Configure Mutt on Linux
 As the first configuration step, you have to create a few directories where the system will store mails, headers, and certificates post-installation.
 
 Issue the following commands one by one:
-|
+
 mkdir -p ~/.mutt/cache/headers
 mkdir ~/.mutt/cache/bodies
 touch ~/.mutt/certificates
-|
+
 Create the Mutt configuration file using the touch command:
-|
+
 touch ~/.mutt/muttrc
-|
+
 Open the muttrc file using your favorite text editor:
-|
+
 sudo nano ~/.mutt/muttrc
-|
+
 Once the editor opens up, it's time to start filling in your mailbox's IMAP and SMTP details to populate the mailbox's settings for incoming and outgoing mails.
 
 Here are the settings:
-|
+<div class="alert alert-info">
+<strong>muttrc</strong>
 set from = "username@gmail.com"
 set realname = "First Last"
 # IMAP settings
@@ -56,7 +57,8 @@ set spoolfile = "+INBOX"
 set postponed = "+[Gmail]/Drafts"
 set record = "+[Gmail]/Sent Mail"
 set trash = "+[Gmail]/Trash"
-|
+</div>
+
 This example demonstrates how to set up a Gmail account using Mutt. Make sure to replace username, First, and Last in the above snippet with your email address username, first name, and last name respectively.
 Deciphering the Commands for Email Settings
 
