@@ -6,10 +6,7 @@ excerpt: Mutt "All mail clients suck. This one just sucks less." -me, circa 1995
 comments: true
 ---
 
-<div class="alert alert-info">
-<strong>Mutt:/strong>
 Mutt es un cliente de correo electrónico libre basado en texto, para sistemas similares a unix.
-</div>
 
 
 ## Uno de mis clientes de correo Favorito!!
