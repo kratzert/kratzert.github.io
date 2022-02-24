@@ -23,9 +23,9 @@ description: Personal Blog / NinjaCLI
 
 # List of links in the navigation bar
 navbar-links:
-  About Me: "Intro"
-  Open Learning: "Dock/Wiki"
-  Projects: "projectos"
+  Intro: "aboutme"
+  Docs/stuffs/wiki: "openlearning"
+  Projectos: "projects"
 #  Resources:
 #    - Beautiful Jekyll: "http://deahttps://i.imgur.com/H0xG6Ug.pngnattali.com/beautiful-jekyll/"
 #    - Learn markdown: "http://www.markdowntutorial.com/"
