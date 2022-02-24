@@ -80,8 +80,8 @@ footer-links-active:
 # Select which share links to show in posts
 share-links-active:
   twitter: true
-  facebook: true
-  google: false
+  facebook: false
+  google: true
   linkedin: false
 
 # How to display the link to the website in the footer
@@ -90,7 +90,7 @@ url-pretty: "dev1lsconf.github.io"  # eg. "deanattali.com/beautiful-jekyll"
 
 # --- Misc --- #
 # Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
-disqus: "dev1lsconf"
+#disqus: "dev1lsconf"
 
 # Fill in your Google Analytics ID to track your website using GA
 #google_analytics: "UA-96660715-1"
