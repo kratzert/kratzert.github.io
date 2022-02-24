@@ -152,3 +152,5 @@ You can use the following commands with Mutt:
 What’s So Special About Mutt?
 
 Mutt is an open-source package that serves the purpose, is relatively small, and gets the job done. Despite its quick processing and resourceful error handling, it falls short when it comes to displaying images within emails.
+
+![Dev1ls Mutt](https://i.imgur.com/PkFxDWF.png "Dev1ls Mutt")
