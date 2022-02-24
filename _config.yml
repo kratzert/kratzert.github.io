@@ -87,11 +87,11 @@ share-links-active:
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "kratzert.github.io"  # eg. "deanattali.com/beautiful-jekyll"
+url-pretty: "dev1lsconf.github.io"  # eg. "deanattali.com/beautiful-jekyll"
 
 # --- Misc --- #
 # Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
-disqus: "kratzertblog"
+disqus: "dev1lsconf"
 
 # Fill in your Google Analytics ID to track your website using GA
 google_analytics: "UA-96660715-1"
