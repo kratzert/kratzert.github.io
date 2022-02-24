@@ -41,27 +41,25 @@ sudo nano ~/.mutt/muttrc
 Once the editor opens up, it's time to start filling in your mailbox's IMAP and SMTP details to populate the mailbox's settings for incoming and outgoing mails.
 
 Here are the settings:
-<div class="alert alert-info">
-<strong>muttrc</strong>
-set from = "username@gmail.com"
-set realname = "First Last"
-# IMAP settings
-set imap_user = "username@gmail.com"
-set imap_pass = "<mailbox password>"
-# SMTP settings
-set smtp_url = "smtps://username@smtp.gmail.com"
-set smtp_pass = "<mailbox password>"
-# Remote Gmail folders
-set folder = "imaps://imap.gmail.com/"
-set spoolfile = "+INBOX"
-set postponed = "+[Gmail]/Drafts"
-set record = "+[Gmail]/Sent Mail"
-set trash = "+[Gmail]/Trash"
-</div>
+
+    set from = "username@gmail.com"
+    set realname = "First Last"
+    # IMAP settings
+    set imap_user = "username@gmail.com"
+    set imap_pass = "<mailbox password>"
+    # SMTP settings
+    set smtp_url = "smtps://username@smtp.gmail.com"
+    set smtp_pass = "<mailbox password>"
+    # Remote Gmail folders
+    set folder = "imaps://imap.gmail.com/"
+    set spoolfile = "+INBOX"
+    set postponed = "+[Gmail]/Drafts"
+    set record = "+[Gmail]/Sent Mail"
+    set trash = "+[Gmail]/Trash"
+
 
 This example demonstrates how to set up a Gmail account using Mutt. Make sure to replace username, First, and Last in the above snippet with your email address username, first name, and last name respectively.
 Deciphering the Commands for Email Settings
-
     From: Sender's email ID
     Realname: This will be your name, which would appear on the email.
     IMAP_user: This is your email address.
