@@ -1,6 +1,6 @@
 ---
 layout: "post"
-title: "Dev1ls Docs-Wiki-Hacks"
+title: "Docs-Wiki-Hacks :) "
 date: "2022-02-23 21:21"
 excerpt: "Stuffs/wikis (lo que no esta aqui.. esta en google! ahahahha...)."
 ---
