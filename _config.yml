@@ -24,8 +24,8 @@ description: A collection of thoughts, ideas, and projects. This repository migh
 # List of links in the navigation bar
 navbar-links:
   About Me: "aboutme"
-  Resources: "openlearning"
-  Projects: "projects"
+  #Open Learning: "openlearning"
+  #Projects: "projects"
 #  Resources:
 #    - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
 #    - Learn markdown: "http://www.markdowntutorial.com/"
@@ -45,12 +45,12 @@ avatar: "/img/avatar.jpg"
 # By default, the navigation bar and footer have a light gray background, and the main page
 # has a white background. You can specify a different background colour or a background image
 # for the navigation bar, the main page, and the footer.
- navbar-col: "#998F42"
- navbar-img: "/img/bgimage.png"
- footer-col: "#998F42"
- footer-img: "/img/bgimage.png"
- page-col: "#dfbd69"
- page-img: "/img/bgimage.png"
+ #navbar-col: "#998F42"
+ #navbar-img: "/img/bgimage.png"
+ #footer-col: "#998F42"
+ #footer-img: "/img/bgimage.png"
+ #page-col: "#dfbd69"
+ #page-img: "/img/bgimage.png"
 
 # --- Footer options --- #
 
