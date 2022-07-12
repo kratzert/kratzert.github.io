@@ -24,7 +24,7 @@ description: A collection of thoughts, ideas, and projects. This repository migh
 # List of links in the navigation bar
 navbar-links:
   About Me: "aboutme"
-  Open Learning: "resources"
+  Resources: "openlearning"
   Projects: "projects"
 #  Resources:
 #    - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
