@@ -10,12 +10,12 @@
       {% if site.title-img %}
         <a class="navbar-brand navbar-brand-logo" href="{{ site.url }}"><img src="{{ site.title-img }}"/></a>
       {% else %}
-        <a class="navbar-brand" href="{{ site.url }}">{{ site.title }}</a>
+        <a class="navbar-right" href="{{ site.url }}">{{ site.title }}</a>
       {% endif %}
     </div>
 
     <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-left">
+      <ul class="nav navbar-nav navbar-right">
       {% for link in site.navbar-links %}
         {% if link[1].first %}
           <li class="navlinks-container">
