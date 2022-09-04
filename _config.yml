@@ -4,7 +4,7 @@
 # baseurl is the website's URL without the hostname
 
 # If you are building a simple GitHub user page (http://username.github.io) then use these settings:
-url: "https://kratzert.github.io"
+url: "https://tb-thoughts.github.io"
 baseurl: ""
 
 # If you are building a GitHub project page then use these settings:
@@ -14,18 +14,18 @@ baseurl: ""
 # Of course don't forget to change the username and projectname to YOUR username and project
 
 # Name of website
-title: Flair of Machine Learning
+title: Jazzed up!
 
 # Short description of your site
-description: A virtual proof that name is awesome!
+description: A collection of thoughts, ideas, and projects. This repository might be transferred to a personal domain one day once I can afford it. 
 
 # --- Navigation bar options --- #
 
 # List of links in the navigation bar
 navbar-links:
   About Me: "aboutme"
-  Open Learning: "openlearning"
-  Projects: "projects"
+  #Open Learning: "openlearning"
+  #Projects: "projects"
 #  Resources:
 #    - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
 #    - Learn markdown: "http://www.markdowntutorial.com/"
@@ -45,25 +45,25 @@ avatar: "/img/avatar.jpg"
 # By default, the navigation bar and footer have a light gray background, and the main page
 # has a white background. You can specify a different background colour or a background image
 # for the navigation bar, the main page, and the footer.
-# navbar-col: "orange"
-# navbar-img: "/img/bgimage.png"
-# footer-col: "blue"
-# footer-img: "/img/bgimage.png"
-# page-col: "#FF0000"
-# page-img: "/img/bgimage.png"
+ #navbar-col: "#998F42"
+ #navbar-img: "/img/bgimage.png"
+ #footer-col: "#998F42"
+ #footer-img: "/img/bgimage.png"
+ #page-col: "#dfbd69"
+ #page-img: "/img/bgimage.png"
 
 # --- Footer options --- #
 
 # Change all these values or delete the ones you don't want.
 # Important: you must keep the "name" parameter, everything else you can remove
 author:
-  name: Frederik Kratzert
-  email: "f.kratzert@gmail.com"
-  github: kratzert
-  twitter: fkratzert
-  linkedin: frederik-kratzert-226a33148
-  xing: yourname
-  stackoverflow: yourlink
+  name: Tarun Baskaran
+  email: "tarunsthanu@gmail.com"
+  github: tb-thoughts
+  #twitter: fkratzert
+  #linkedin: frederik-kratzert-226a33148
+  #xing: yourname
+  #stackoverflow: yourlink
 
 
 # Select which links to show in the footer
@@ -80,21 +80,21 @@ footer-links-active:
 
 # Select which share links to show in posts
 share-links-active:
-  twitter: true
-  facebook: true
-  google: false
+  twitter: false
+  facebook: false
+  google: true
   linkedin: true
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "kratzert.github.io"  # eg. "deanattali.com/beautiful-jekyll"
+url-pretty: "tb-thoughts.github.io"  # eg. "deanattali.com/beautiful-jekyll"
 
 # --- Misc --- #
 # Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
-disqus: "kratzertblog"
+disqus: "tharunbaskaaran"
 
 # Fill in your Google Analytics ID to track your website using GA
-google_analytics: "UA-96660715-1"
+google_analytics: "G-ETV5RCL0C9"
 
 # Google Tag Manager ID
 #gtm: ""
